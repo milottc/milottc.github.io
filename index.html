@@ -815,6 +815,8 @@ full.innerHTML = all.map(projectRowHtml).join("") ||
 /* =========================================================
 RENDER: PROJECT DETAIL
 ========================================================= */
+var _lastBlobUrl = null;
+
 function renderProjectDetail(slug) {
 var host = document.getElementById("projectDetailHost");
 if (!host) return;
@@ -855,8 +857,10 @@ html += '<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel=
 } else if (p.appCode) {
 // Create a Blob URL so the link opens the raw HTML code directly in a new tab
 // This bypasses any popup blockers because it's a standard HTML link!
+if (_lastBlobUrl) URL.revokeObjectURL(_lastBlobUrl);
 var blob = new Blob([p.appCode], { type: "text/html" });
 var blobUrl = URL.createObjectURL(blob);
+_lastBlobUrl = blobUrl;
 html += '<a class="btn btn-primary" href="' + blobUrl + '" target="_blank" rel="noopener">Launch App (Run Code) ↗</a>';
 }
 html += '</div>';
@@ -885,7 +889,8 @@ var views = document.querySelectorAll(".view");
 var navLinks = document.querySelectorAll("[data-nav]");
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-if (hash === "project-detail") return "home";
+// FIX: any hash starting with "project-" is a project detail route
+if (hash.indexOf("project-") === 0) return hash;
 if (document.getElementById("view-" + hash)) return hash;
 return "home";
 }
@@ -1239,6 +1244,10 @@ updateSubCount();
 if (window.location.hash === "#admin") {
 renderAdmin();
 }
+// FIX: re-run the router now that project data has loaded, so a
+// deep link like #project-math (or a refresh on a detail page)
+// renders the real project instead of "Project not found".
+window.dispatchEvent(new Event("hashchange"));
 }
 
 init();
