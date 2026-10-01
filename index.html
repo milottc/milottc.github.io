@@ -1,318 +1,896 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head><script async src="https://www.googletagmanager.com/gtag/js?id=G-YCD0P6TF9S"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ethan — Developer</title>
+<style>
+  :root {
+    --fg: #111111;
+    --muted: #6b6b6b;
+    --faint: #999999;
+    --border: #e8e8e8;
+    --bg: #ffffff;
+    --width: 760px;
+  }
 
-  gtag('config', 'G-YCD0P6TF9S');
-</script><meta name="robots" content="index, follow"><script>
-    (function() {
-      const consoleMethods = ['log', 'info', 'warn', 'error', 'debug'];
-      consoleMethods.forEach(method => {
-        const originalMethod = console[method];
-        console[method] = function(...args) {
-          originalMethod.apply(console, args);
-          try {
-             window.parent?.postMessage({
-              type: 'JIT_LOGGER_CONSOLE_LOG',
-              level: method,
-              args: args
-            }, '*');
-          } catch {
-          }
-        };
-      });
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 
-      window.addEventListener('error', (event) => {
-        try {
-          window.parent?.postMessage({
-          type: 'JIT_LOGGER_RUNTIME_ERROR',
-          message: event.message,
-          filename: event.filename,
-          lineno: event.lineno,
-          colno: event.colno,
-          error: event.error?.stack || null
-        }, '*');
-        } catch {
-        }
-      });
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--fg);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
 
-      window.addEventListener('unhandledrejection', (event) => {
-        try {
-          window.parent.postMessage({
-          type: 'JIT_LOGGER_UNHANDLED_REJECTION',
-          reason: event.reason?.stack || event.reason || 'Unknown',
-        }, '*');
-        } catch {
-        }
-      });
+  .wrap { max-width: var(--width); margin: 0 auto; padding: 0 24px; }
 
-    })();
-  </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JIT.dev - Milo ttc - My Website</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        
-        nav {
-            background-color: #34495e;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        
-        nav a:hover {
-            background-color: #2c3e50;
-        }
-        
-        .hero {
-            background-color: #3498db;
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
-        
-        .section {
-            background: white;
-            padding: 2rem;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .section h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 5px;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background: #2980b9;
-        }
-        
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            margin-top: 20px;
-        }
-        
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .updates {
-            background-color: #e8f5e8;
-            border-left: 4px solid #27ae60;
-        }
-        
-        .cheeses {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-        }
-    </style>
+  /* ---------- Nav ---------- */
+  nav { border-bottom: 1px solid var(--border); }
+  .nav-inner {
+    max-width: var(--width); margin: 0 auto; padding: 22px 24px;
+    display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
+  }
+  .brand {
+    font-weight: 600; font-size: 0.95rem; letter-spacing: -0.01em;
+    text-decoration: none; color: var(--fg);
+  }
+  .nav-links {
+    display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-size: 0.9rem;
+  }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .nav-links a:hover { color: var(--fg); }
+  .nav-links a.active { color: var(--fg); font-weight: 500; }
+
+  /* ---------- Hero ---------- */
+  header.hero { padding: 96px 0 72px; }
+  .eyebrow {
+    display: block; font-size: 0.78rem; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--faint); margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(1.9rem, 4.4vw, 2.6rem);
+    line-height: 1.2; letter-spacing: -0.025em; font-weight: 600;
+    margin: 0 0 22px; max-width: 620px;
+  }
+  .lede { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 0 32px; }
+
+  /* ---------- Buttons ---------- */
+  .cta-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; font: inherit; font-size: 0.9rem; font-weight: 500;
+    padding: 10px 18px; border-radius: 4px; text-decoration: none;
+    border: 1px solid transparent; cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .btn-primary { background: var(--fg); color: #fff; }
+  .btn-primary:hover { background: #2a2a2a; }
+  .btn-ghost { background: transparent; color: var(--fg); border-color: var(--border); }
+  .btn-ghost:hover { border-color: var(--fg); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 48px 0; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
+  h2 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 8px; }
+  .section-head { margin-bottom: 32px; max-width: 580px; }
+  .section-head p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+  /* ---------- Project list ---------- */
+  .project-list { border-top: 1px solid var(--border); }
+  .project-row {
+    display: grid; grid-template-columns: 40px 1fr; gap: 20px;
+    padding: 26px 0; border-bottom: 1px solid var(--border);
+    text-decoration: none; color: inherit;
+    transition: padding 0.15s ease;
+  }
+  .project-row:hover { padding-left: 6px; }
+  .project-num { font-size: 0.8rem; color: var(--faint); padding-top: 4px; font-variant-numeric: tabular-nums; }
+  .project-row h3 {
+    font-size: 1.02rem; font-weight: 500; letter-spacing: -0.01em;
+    margin: 0 0 6px; transition: color 0.15s ease;
+  }
+  .project-row:hover h3 { color: #000; }
+  .project-row p { margin: 0 0 8px; color: var(--muted); font-size: 0.93rem; }
+  .project-meta { font-size: 0.8rem; color: var(--faint); }
+  .project-meta span + span::before { content: " · "; margin: 0 4px; }
+
+  /* ---------- Interest list ---------- */
+  .interest-list {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 0; border-top: 1px solid var(--border);
+  }
+  .interest-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
+  .interest-item:nth-child(odd) { padding-right: 24px; }
+  .interest-item h3 { font-size: 0.95rem; font-weight: 500; margin: 0 0 4px; }
+  .interest-item p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+  /* ---------- Fact block ---------- */
+  .fact-block { border: 1px solid var(--border); border-radius: 6px; padding: 40px 32px; }
+  .fact-block .section-head { margin-bottom: 20px; }
+  #factText {
+    font-size: 1.05rem; line-height: 1.55; margin: 0 0 26px;
+    max-width: 560px; min-height: 3.2em; transition: opacity 0.2s ease;
+  }
+
+  /* ---------- Contact ---------- */
+  .contact-block { border-top: 1px solid var(--border); padding-top: 36px; max-width: 580px; }
+  .contact-block p { color: var(--muted); margin: 0 0 22px; }
+  .contact-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* ---------- Project detail ---------- */
+  .project-hero { padding: 72px 0 32px; }
+  .back {
+    display: inline-block; font-size: 0.85rem; color: var(--muted);
+    text-decoration: none; margin-bottom: 28px;
+  }
+  .back:hover { color: var(--fg); }
+  .project-hero h1 { font-size: clamp(1.6rem, 3.6vw, 2.1rem); margin-bottom: 14px; }
+  .project-hero .lede { margin-bottom: 20px; }
+  .meta-row { font-size: 0.82rem; color: var(--faint); margin-bottom: 6px; }
+  .meta-row span + span::before { content: " · "; margin: 0 4px; }
+
+  .project-body h2 { margin-top: 40px; font-size: 1.05rem; }
+  .project-body h2:first-child { margin-top: 0; }
+  .project-body p { color: var(--muted); margin: 0 0 16px; max-width: 620px; }
+  .project-body ul { color: var(--muted); padding-left: 20px; max-width: 620px; margin: 0 0 16px; }
+  .project-body li { margin-bottom: 8px; }
+  .project-body .actions {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 40px;
+    padding-top: 32px; border-top: 1px solid var(--border);
+  }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--border); padding: 32px 0 56px; font-size: 0.83rem; color: var(--faint); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+
+  /* ---------- Router ---------- */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ---------- Focus ---------- */
+  :focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; border-radius: 2px; }
+
+  /* ---------- Motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 640px) {
+    .nav-inner { flex-wrap: wrap; }
+    .nav-links { gap: 16px; font-size: 0.85rem; flex-wrap: wrap; }
+    header.hero { padding: 64px 0 48px; }
+    section { padding: 40px 0; }
+    .interest-list { grid-template-columns: 1fr; }
+    .interest-item:nth-child(odd) { padding-right: 0; }
+    .project-row { grid-template-columns: 28px 1fr; gap: 14px; }
+  }
+</style>
 </head>
 <body>
-    <header>
-        <h1>Milo ttc</h1>
-        <p>Welcome to my awesome website!</p>
-    </header>
-    
-    <nav>
-        <a href="#games">My HTML games!</a>
-        <a href="#tools">My HTML tools!</a>
-        <a href="#other">My other website!</a>
-        <a href="#chat">My free chat!</a>
-        <a href="#bugcity">Bug city!</a>
-        <a href="#signin">Sign in</a>
-    </nav>
-    
-    <div class="container">
-        <section class="hero">
-            <h2>Hello! I'm Milo</h2>
-            <p>Welcome to my website where I share my projects, hobbies, and fun stuff!</p>
-            <a href="#about" class="btn">Learn More About Me</a>
-        </section>
-        
-        <section id="about" class="section">
-            <h2>About Me</h2>
-            <p>Here are some things I enjoy:</p>
-            <ul>
-                <li>Making creative projects</li>
-                <li>Building cool things with cardboard</li>
-                <li>Playing video games</li>
-                <li>Exploring new technologies like JavaScript</li>
-                <li>Listening to worship music</li>
-                <li>Learning about medical equipment</li>
-                <li>Spending time with family and friends</li>
-                <li>Watching YouTube and learning from others' projects</li>
-                <li>Trying out new hobbies and interests</li>
-            </ul>
-        </section>
-        
-        <section id="cheeses" class="section cheeses">
-            <h2>Cheeses I Like</h2>
-            <ul>
-                <li>Cheddar</li>
-                <li>Swiss</li>
-                <li>Brie</li>
-                <li>Gouda</li>
-                <li>Parmesan</li>
-                <li>Mozzarella</li>
-                <li>Blue Cheese</li>
-                <li>Feta</li>
-                <li>Camembert</li>
-                <li>Colby</li>
-            </ul>
-        </section>
-        
-        <section id="projects" class="section">
-            <h2>My Projects</h2>
-            <div>
-                <a href="#" class="btn">My humhub!</a>
-                <a href="#" class="btn">My ancient Rome project!</a>
-                <a href="#" class="btn">My somthing!</a>
-                <a href="#" class="btn">My canva site!</a>
-                <a href="#" class="btn">My other (trash) canva site!</a>
-                <a href="#" class="btn">My wordpress!</a>
-                <a href="#" class="btn">My videos!</a>
-                <a href="#" class="btn">My dessert website!</a>
-                <a href="#" class="btn">My other free chat!</a>
-                <a href="#" class="btn">Milo Buddy!</a>
-            </div>
-        </section>
-        
-        <section id="updates" class="section updates">
-            <h2>Our Updates!</h2>
-            <div>
-                <p><strong>2025-06-13:</strong> We just made the news system!</p>
-                <p><strong>2025-06-16:</strong> my name is milo</p>
-                <p><strong>Thursday, June 26, 2025:</strong> It's the end of school! (i'm sad)</p>
-                <p><strong>Thursday, June 26, 2025:</strong> I'm very sad please help me in my website's chat 
-                   (<a href="http://www.milottc.great-site.net/chat/index.html" target="_blank">chat</a> OR 
-                    <a href="http://www.milottc.great-site.net/guestbook" target="_blank">guestbook</a>)</p>
-            </div>
-        </section>
-        
-        <section id="newsletter" class="section">
-            <h2>Subscribe to my newsletter!</h2>
-            <form>
-                <div class="form-group">
-                    <label for="email">email:</label>
-                    <input type="email" id="email" name="email" placeholder="Enter your email">
-                </div>
-                <button type="submit" class="btn">Submit</button>
-            </form>
-        </section>
-        
-        <section id="contact" class="section">
-            <h2>Message me!</h2>
-            <form>
-                <div class="form-group">
-                    <label for="name">Your Name:</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your name">
-                </div>
-                <div class="form-group">
-                    <label for="message">Your Message:</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Enter your message"></textarea>
-                </div>
-                <button type="submit" class="btn">Send Email</button>
-            </form>
-        </section>
+
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="#home">Ethan</a>
+    <ul class="nav-links">
+      <li><a href="#home"      data-nav="home">Home</a></li>
+      <li><a href="#projects"  data-nav="projects">Projects</a></li>
+      <li><a href="#about"     data-nav="about">About</a></li>
+      <li><a href="#interests" data-nav="interests">Interests</a></li>
+      <li><a href="#fun"       data-nav="fun">Fun</a></li>
+      <li><a href="#contact"   data-nav="contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<div class="view" id="view-home" data-view="home">
+  <header class="hero wrap">
+    <span class="eyebrow">Developer</span>
+    <h1>Hi, I'm Ethan. I build things with code.</h1>
+    <p class="lede">
+      Welcome to my corner of the internet. I'm a developer who loves turning
+      ideas into working software — from small utilities to bigger experiments.
+      When I'm not coding, I'm probably deep in math, anesthesia, physics,
+      chemistry, aviation, cheese, monkeys, or raccoons. But mostly code.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#projects">See my projects</a>
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 Milo ttc. All rights reserved.</p>
-        <p>You can email me at milottc@outlook.com</p>
-        <p><a href="#" style="color: white;">Terms & Privacy Policy</a></p>
-    </footer>
-    
-    <script>
-        // Simple form handling
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Thank you for your message! I\'ll get back to you soon.');
-                this.reset();
-            });
-        });
-        
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"33d7f03340c541debe8fa67741413392","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+  </header>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>Selected work</h2>
+      <p>A few things I've built recently. See the projects page for the full list.</p>
+    </div>
+    <div class="project-list">
+      <a class="project-row" href="#project-math">
+        <span class="project-num">01</span>
+        <div>
+          <h3>Math Expression Solver</h3>
+          <p>A web app that parses and solves algebraic expressions step-by-step.</p>
+          <div class="project-meta"><span>JavaScript</span><span>Parser</span><span>Education</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-anesthesia">
+        <span class="project-num">02</span>
+        <div>
+          <h3>Anesthesia Dose Calculator</h3>
+          <p>A clinical decision-support tool for weight-based anesthetic dosages.</p>
+          <div class="project-meta"><span>Python</span><span>Flask</span><span>Health</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-flight">
+        <span class="project-num">03</span>
+        <div>
+          <h3>Flight Plan Visualizer</h3>
+          <p>Plot flight plans on an interactive map with altitude profiles.</p>
+          <div class="project-meta"><span>React</span><span>Mapbox</span><span>API</span></div>
+        </div>
+      </a>
+    </div>
+    <div class="cta-row" style="margin-top:32px;">
+      <a class="btn btn-ghost" href="#projects">All projects</a>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>Beyond the keyboard</h2>
+      <p>Math, medicine, aviation, cheese, and a mild obsession with raccoons.</p>
+    </div>
+    <div class="interest-list">
+      <div class="interest-item">
+        <h3>Math &amp; Physics</h3>
+        <p>Proofs, patterns, and the strange satisfaction of a clean solution.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Cheese &amp; Raccoons</h3>
+        <p>A scientific discipline disguised as a snack, plus nature's tiny engineers.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Anesthesiology</h3>
+        <p>Keeping people safely unconscious — physiology, pharmacology, judgment.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Aviation</h3>
+        <p>Flight planning, aerodynamics, and the mild magic of leaving the ground.</p>
+      </div>
+    </div>
+    <div class="cta-row" style="margin-top:32px;">
+      <a class="btn btn-ghost" href="#interests">All interests</a>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="contact-block">
+      <h2>Let's build something</h2>
+      <p>
+        Whether you want to collaborate on a project, have a coding question, or
+        just want to talk about math, anesthesia, cheese, or raccoons — my inbox
+        is open and I promise to be friendly.
+      </p>
+      <a class="btn btn-primary" href="#contact">Contact me</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECTS ============ -->
+<div class="view" id="view-projects" data-view="projects">
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">Work</span>
+    <h1>Projects</h1>
+    <p class="lede">
+      A selection of coding projects I'm proud of. Some are practical, some are
+      experiments, and some exist because I thought "wouldn't it be cool if…"
+    </p>
+  </header>
+
+  <section class="wrap" style="border-top:none; padding-top:0;">
+    <div class="project-list">
+      <a class="project-row" href="#project-math">
+        <span class="project-num">01</span>
+        <div>
+          <h3>Math Expression Solver</h3>
+          <p>A web app that parses and solves algebraic expressions step-by-step, showing the user each transformation.</p>
+          <div class="project-meta"><span>JavaScript</span><span>Parser</span><span>Education</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-anesthesia">
+        <span class="project-num">02</span>
+        <div>
+          <h3>Anesthesia Dose Calculator</h3>
+          <p>A clinical decision-support tool that calculates weight-based drug dosages for common anesthetics.</p>
+          <div class="project-meta"><span>Python</span><span>Flask</span><span>Health</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-flight">
+        <span class="project-num">03</span>
+        <div>
+          <h3>Flight Plan Visualizer</h3>
+          <p>Upload a flight plan and see it plotted on an interactive map with altitude profiles and fuel estimates.</p>
+          <div class="project-meta"><span>React</span><span>Mapbox</span><span>API</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-raccoon">
+        <span class="project-num">04</span>
+        <div>
+          <h3>Raccoon Tracker</h3>
+          <p>A playful IoT dashboard that logs "raccoon visits" using a motion sensor and a Raspberry Pi.</p>
+          <div class="project-meta"><span>Raspberry Pi</span><span>Python</span><span>IoT</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-cheese">
+        <span class="project-num">05</span>
+        <div>
+          <h3>Cheese Recommender</h3>
+          <p>A small ML model that suggests cheeses based on your flavour preferences, trained on 300+ varieties.</p>
+          <div class="project-meta"><span>Python</span><span>scikit-learn</span><span>ML</span></div>
+        </div>
+      </a>
+      <a class="project-row" href="#project-periodic">
+        <span class="project-num">06</span>
+        <div>
+          <h3>Periodic Table Explorer</h3>
+          <p>An interactive periodic table with element data, electron configurations, and a quiz mode.</p>
+          <div class="project-meta"><span>Vue</span><span>Data Viz</span><span>Education</span></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="cta-row" style="margin-top:40px;">
+      <a class="btn btn-primary" href="#contact">Collaborate with me</a>
+      <a class="btn btn-ghost" href="#about">More about me</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="view" id="view-about" data-view="about">
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">About</span>
+    <h1>I like problems that don't have an obvious answer yet.</h1>
+    <p class="lede">
+      The kind where you have to poke at them from three different angles before
+      something clicks. That's basically the thread connecting everything I do.
+    </p>
+  </header>
+
+  <section class="wrap" style="border-top:none; padding-top:0;">
+    <div class="interest-list">
+      <div class="interest-item">
+        <h3>Curious by default</h3>
+        <p>If something is complicated, my instinct is to take it apart and see how it works.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Friendly, not scary</h3>
+        <p>I genuinely enjoy explaining things and being explained to. Ask me anything.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Precision + play</h3>
+        <p>Rigorous where it counts, silly where it doesn't. Usually in the same sentence.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Showing the work</h3>
+        <p>Whether it's math or code, the reasoning matters as much as the result.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head"><h2>How I got here</h2></div>
+    <p style="color:var(--muted); max-width:620px; margin:0;">
+      I started coding because I wanted to make a calculator that showed its
+      work — that turned into a habit of building small tools to answer whatever
+      question was stuck in my head. Somewhere along the way I fell in love with
+      the process: the parsing, the debugging, the moment the thing finally runs.
+    </p>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head"><h2>What I'm working on now</h2></div>
+    <p style="color:var(--muted); max-width:620px; margin:0 0 24px;">
+      Mostly tools at the intersection of code and the other things I care
+      about — math education, clinical support, aviation, and (yes) cheese. If
+      you want to see the details, the projects page is the place to go.
+    </p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#projects">See my projects</a>
+      <a class="btn btn-ghost" href="#contact">Get in touch</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ INTERESTS ============ -->
+<div class="view" id="view-interests" data-view="interests">
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">Interests</span>
+    <h1>Things I'm into</h1>
+    <p class="lede">
+      An honest, slightly unhinged list of everything that occupies my brain
+      space when I'm not shipping code.
+    </p>
+  </header>
+
+  <section class="wrap" style="border-top:none; padding-top:0;">
+    <div class="interest-list">
+      <div class="interest-item">
+        <h3>Math</h3>
+        <p>Proofs, patterns, and the strange satisfaction of a clean solution.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Anesthesiology</h3>
+        <p>Keeping someone safely unconscious and pain-free — physiology, pharmacology, judgment.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Science &amp; Physics</h3>
+        <p>From why the sky is blue to why a wing generates lift. Physics is math that moves.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Chemistry</h3>
+        <p>Reactions, bonding, and the beautiful chaos of molecules deciding what to do next.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Coding</h3>
+        <p>Turning ideas into things that actually run. A good algorithm, a well-named variable.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Aviation</h3>
+        <p>Flight planning, aerodynamics, and the mild magic of a 200-ton machine leaving the ground.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Cheese</h3>
+        <p>An entire scientific discipline disguised as a snack. Aged gouda is a personality trait.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Monkeys</h3>
+        <p>Clever, social, and chaotic in the best way. Primatology is wildly underrated.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Raccoons</h3>
+        <p>Nature's tiny engineers with thumbs and no respect for your trash can.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Learning</h3>
+        <p>Anything I can take apart, understand, and eventually explain to someone else.</p>
+      </div>
+    </div>
+
+    <div class="cta-row" style="margin-top:40px;">
+      <a class="btn btn-primary" href="#projects">See what I build</a>
+      <a class="btn btn-ghost" href="#fun">Random fun facts</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ FUN ============ -->
+<div class="view" id="view-fun" data-view="fun">
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">Fun</span>
+    <h1>Random facts</h1>
+    <p class="lede">A fact, a joke, or a deeply unnecessary observation from my brain.</p>
+  </header>
+
+  <section class="wrap" style="border-top:none; padding-top:0;">
+    <div class="fact-block">
+      <div class="section-head">
+        <h2>Fact generator</h2>
+        <p>Tap the button for another one. There are plenty in the mix.</p>
+      </div>
+      <p id="factText" aria-live="polite">Loading something mildly interesting…</p>
+      <button class="btn btn-primary" id="factBtn" type="button">Give me another one</button>
+    </div>
+
+    <div class="cta-row" style="margin-top:40px;">
+      <a class="btn btn-primary" href="#projects">See my projects</a>
+      <a class="btn btn-ghost" href="#contact">Say hi</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ CONTACT ============ -->
+<div class="view" id="view-contact" data-view="contact">
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">Contact</span>
+    <h1>Get in touch</h1>
+    <p class="lede">
+      Whether it's a math problem you're stuck on, a great cheese recommendation,
+      a raccoon video, a coding question, or a note about anesthesia — my inbox
+      is open and I promise to be friendly.
+    </p>
+  </header>
+
+  <section class="wrap" style="border-top:none; padding-top:0;">
+    <div class="contact-block" style="border-top:none; padding-top:0;">
+      <h2>Email</h2>
+      <p>The fastest way to reach me. I read everything, and I try to reply within a day or two.</p>
+      <a class="btn btn-primary" href="mailto:ethankwan1@outlook.com">ethankwan1@outlook.com</a>
+      <div class="contact-links">
+        <a class="btn btn-ghost" href="#projects">See my projects</a>
+        <a class="btn btn-ghost" href="#about">More about me</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="section-head">
+      <h2>What I'm happy to talk about</h2>
+      <p>Pretty much anything, but especially these.</p>
+    </div>
+    <div class="interest-list">
+      <div class="interest-item">
+        <h3>Collaborations</h3>
+        <p>Building something together, reviewing code, or bouncing ideas around.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Math &amp; Science</h3>
+        <p>Homework help, interesting problems, or just a good physics argument.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Cheese &amp; Critters</h3>
+        <p>Yes, really. Send me your favourite cheese and your best raccoon sighting.</p>
+      </div>
+      <div class="interest-item">
+        <h3>Aviation &amp; Medicine</h3>
+        <p>Flight planning, aerodynamics, or anything anesthesiology-adjacent.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: MATH ============ -->
+<div class="view" id="view-project-math" data-view="project-math">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Math Expression Solver</h1>
+    <div class="meta-row"><span>JavaScript</span><span>Parser</span><span>Education</span></div>
+    <p class="lede">
+      A web app that parses and solves algebraic expressions step-by-step,
+      showing each transformation along the way.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      You type in an algebraic expression, and the solver breaks it down into a
+      sequence of equivalent forms — combining like terms, distributing,
+      isolating variables — so you can see <em>why</em> the answer is what it
+      is, not just what the answer is.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>Tokenizer turns the raw string into a stream of tokens (numbers, operators, variables).</li>
+      <li>A recursive-descent parser builds an abstract syntax tree.</li>
+      <li>Rewrite rules apply one transformation at a time, producing a step list.</li>
+      <li>Each step is rendered with a short plain-English explanation.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>How to design a small expression grammar and keep it readable.</li>
+      <li>Why operator precedence and associativity are worth getting right the first time.</li>
+      <li>That showing work is genuinely harder than producing the answer.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: ANESTHESIA ============ -->
+<div class="view" id="view-project-anesthesia" data-view="project-anesthesia">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Anesthesia Dose Calculator</h1>
+    <div class="meta-row"><span>Python</span><span>Flask</span><span>Health</span></div>
+    <p class="lede">
+      A clinical decision-support tool that calculates weight-based drug dosages
+      for common anesthetics, with safety checks and clear unit handling.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      Enter a patient's weight and the drug you're working with, and the tool
+      returns the recommended dose range in the right units. It flags values
+      outside safe ranges, warns about common unit mix-ups (mg vs. mcg), and
+      shows the underlying calculation so nothing is a black box.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>Drug library stored as structured data (name, unit, mg/kg range, notes).</li>
+      <li>Flask backend handles the dose math and validation.</li>
+      <li>Frontend is a small form that highlights warnings inline.</li>
+      <li>Every result includes the formula used and a citation to the source range.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>Unit handling is where most bugs live — always be explicit about mg vs. mcg.</li>
+      <li>Safety-critical tools should show their work, not just their answer.</li>
+      <li>Designing for a clinician's workflow means fewer clicks, bigger text.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: FLIGHT ============ -->
+<div class="view" id="view-project-flight" data-view="project-flight">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Flight Plan Visualizer</h1>
+    <div class="meta-row"><span>React</span><span>Mapbox</span><span>API</span></div>
+    <p class="lede">
+      Upload a flight plan and see it plotted on an interactive map with
+      altitude profiles and rough fuel estimates.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      Drop in a flight plan file, and the tool draws the route on a map, shows
+      the planned altitudes along the way, and estimates fuel burn using a
+      simplified model. It's a learning tool for people who want to see how the
+      numbers relate to the picture.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>Parser reads the plan and extracts waypoints, altitudes, and speeds.</li>
+      <li>Mapbox renders the route and lets you scrub along it.</li>
+      <li>Altitude profile drawn below the map using SVG.</li>
+      <li>Fuel estimate uses a basic burn rate scaled by phase of flight.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>Flight plan formats are surprisingly fiddly — real-world data is messy.</li>
+      <li>Coordinating a map and a chart is all about keeping one source of truth.</li>
+      <li>Any estimate is only as good as the assumptions behind it.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: RACCOON ============ -->
+<div class="view" id="view-project-raccoon" data-view="project-raccoon">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Raccoon Tracker</h1>
+    <div class="meta-row"><span>Raspberry Pi</span><span>Python</span><span>IoT</span></div>
+    <p class="lede">
+      A playful IoT dashboard that logs "raccoon visits" to a backyard feeder
+      using a motion sensor and a Raspberry Pi.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      A motion sensor watches the feeder. When something moves, the Pi takes a
+      timestamped snapshot, logs it, and pushes the event to a small web
+      dashboard. Over time you get a nice chart of when the raccoons are most
+      active — which, as it turns out, is basically all night.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>PIR sensor on a GPIO pin triggers the capture script.</li>
+      <li>Python script grabs a still from the camera and writes a log entry.</li>
+      <li>Flask app serves a dashboard with a chart and a recent-events list.</li>
+      <li>Runs headless on the Pi and survives reboots.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>Debouncing sensors is half the battle with physical inputs.</li>
+      <li>Long-running scripts need care — logging and restarts matter.</li>
+      <li>Raccoons are, without question, the most dedicated visitors.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: CHEESE ============ -->
+<div class="view" id="view-project-cheese" data-view="project-cheese">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Cheese Recommender</h1>
+    <div class="meta-row"><span>Python</span><span>scikit-learn</span><span>ML</span></div>
+    <p class="lede">
+      A small ML model that suggests cheeses based on your flavour preferences,
+      trained on a hand-curated dataset of 300+ varieties.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      Rate a handful of cheeses you already know, and the model recommends a few
+      new ones to try — leaning toward styles it thinks match your taste. It's a
+      fun excuse to build a recommender from scratch on a small, opinionated
+      dataset.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>Dataset: name, style, milk, ageing, and a few flavour axes (sharp, creamy, funky, salty, nutty).</li>
+      <li>User ratings become a preference vector, and cosine similarity picks the nearest cheeses.</li>
+      <li>Simple content-based filtering — no collaborative data needed.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>Small, clean datasets often beat big, messy ones for a side project.</li>
+      <li>Feature design is the real model — the algorithm is almost an afterthought.</li>
+      <li>People will absolutely argue with a cheese recommendation. That's the fun part.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PROJECT: PERIODIC ============ -->
+<div class="view" id="view-project-periodic" data-view="project-periodic">
+  <header class="project-hero wrap">
+    <a class="back" href="#projects">← All projects</a>
+    <h1>Periodic Table Explorer</h1>
+    <div class="meta-row"><span>Vue</span><span>Data Viz</span><span>Education</span></div>
+    <p class="lede">
+      An interactive periodic table with detailed element data, electron
+      configurations, and a quiz mode.
+    </p>
+  </header>
+
+  <section class="project-body wrap">
+    <h2>What it does</h2>
+    <p>
+      A full periodic table you can click around in. Each element shows its
+      properties, electron configuration, and a short description. There's also
+      a quiz mode that asks you to identify elements from their properties —
+      useful for students, and fun for anyone who likes chemistry.
+    </p>
+    <h2>How it works</h2>
+    <ul>
+      <li>Element data stored as a JSON file (name, symbol, number, category, properties).</li>
+      <li>Vue renders the grid and handles selection and filtering.</li>
+      <li>Colour coding by category with a legend and toggle.</li>
+      <li>Quiz mode pulls random elements and asks property-based questions.</li>
+    </ul>
+    <h2>What I learned</h2>
+    <ul>
+      <li>Layout grids are the easy part — the data model is the real work.</li>
+      <li>Good colour choices make a data viz useful, not just pretty.</li>
+      <li>Quizzing yourself is still the fastest way to learn something.</li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="#contact">Ask me about this project</a>
+      <a class="btn btn-ghost" href="#projects">Back to all projects</a>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>© <span id="year"></span> Ethan</div>
+    <a href="mailto:ethankwan1@outlook.com">ethankwan1@outlook.com</a>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   HASH ROUTER
+   - Every link uses #view-name
+   - Also highlights the correct nav item on project sub-pages
+   ========================================================= */
+(function () {
+  var views = document.querySelectorAll(".view");
+  var navLinks = document.querySelectorAll("[data-nav]");
+
+  function getRoute() {
+    var hash = window.location.hash.replace(/^#/, "") || "home";
+    // If the hash points to a real view, use it. Otherwise go home.
+    return document.getElementById("view-" + hash) ? hash : "home";
+  }
+
+  function navKeyFor(route) {
+    // Sub-pages (project-*) should highlight "Projects" in the nav.
+    if (route.indexOf("project-") === 0) return "projects";
+    return route;
+  }
+
+  function render() {
+    var route = getRoute();
+    var navKey = navKeyFor(route);
+
+    views.forEach(function (v) {
+      v.classList.toggle("active", v.dataset.view === route);
+    });
+
+    navLinks.forEach(function (l) {
+      l.classList.toggle("active", l.dataset.nav === navKey);
+    });
+
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  window.addEventListener("hashchange", render);
+  window.addEventListener("load", render);
+  render();
+})();
+
+/* =========================================================
+   RANDOM FACT GENERATOR
+   ========================================================= */
+(function () {
+  var facts = [
+    "The first computer bug was an actual moth, found in the Harvard Mark II in 1947. Debugging has been literal ever since.",
+    "In JavaScript, 0.1 + 0.2 does not equal 0.3. Floating-point arithmetic is a wonderful, terrible thing.",
+    "Honey never spoils. Archaeologists have found 3,000-year-old honey in Egyptian tombs that was still edible.",
+    "Raccoons can remember solutions to tasks for up to three years. They're basically furry grad students.",
+    "The word 'anesthesia' comes from Greek — 'an' (without) + 'aisthesis' (sensation). Literally 'without feeling.'",
+    "There's a cheese called 'Stinking Bishop' that's washed in perry. It's as divisive as it sounds.",
+    "A commercial jet wing generates lift partly because of the Coandă effect — airflow literally hugs the curved surface.",
+    "Monkeys can learn to use tokens as currency, and some have been observed 'paying' for food.",
+    "The sum of the first n odd numbers is always n². Try it: 1+3+5+7 = 16 = 4².",
+    "Water is one of very few substances that's less dense as a solid — which is why ice floats.",
+    "Your body produces roughly 2 million red blood cells per second. No pressure.",
+    "There are over 1,800 named varieties of cheese worldwide. That's a lifetime of research.",
+    "A group of raccoons is sometimes called a 'gaze'. A group of monkeys is a 'troop'. Both are excellent.",
+    "The number 0.999… (repeating) is exactly equal to 1. Not close. Equal."
+  ];
+
+  var factText = document.getElementById("factText");
+  var factBtn = document.getElementById("factBtn");
+  var last = -1;
+
+  function show() {
+    if (!factText) return;
+    var i;
+    do { i = Math.floor(Math.random() * facts.length); }
+    while (facts.length > 1 && i === last);
+    last = i;
+
+    factText.style.opacity = "0";
+    setTimeout(function () {
+      factText.textContent = facts[i];
+      factText.style.opacity = "1";
+    }, 150);
+  }
+
+  if (factBtn) factBtn.addEventListener("click", show);
+  show();
+})();
+
+/* =========================================================
+   FOOTER YEAR
+   ========================================================= */
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
 </body>
 </html>
