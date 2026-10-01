@@ -427,7 +427,7 @@ appear on any device you visit this site from.
 <div class="field">
 <label for="p-appUrl">App URL (optional)</label>
 <input type="url" id="p-appUrl" name="appUrl" placeholder="https://my-cool-app.com" />
-<div class="hint">Link to the live app (e.g., GitHub Pages).</div>
+<div class="hint">Link to the live app. We'll add https:// if you forget it.</div>
 </div>
 <div class="field">
 <label for="p-appCode">App Code (optional)</label>
@@ -550,7 +550,7 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
-appUrl: "https://example.com/math-solver", // Add your URL here
+appUrl: "", // Add your URL here
 appCode: "", // Or paste raw code here
 sections: [
 { h: "What it does", p: [
@@ -847,9 +847,15 @@ html += '<section class="project-body wrap">';
 
 // Add the Launch App button if URL or Code exists
 if (p.appUrl || p.appCode) {
-html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">' +
-'<button class="btn btn-primary" id="launchAppBtn" data-slug="' + esc(p.slug) + '">Launch App</button>' +
-'</div>';
+html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">';
+if (p.appUrl) {
+var url = p.appUrl;
+if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+html += '<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener">Launch App ↗</a>';
+} else if (p.appCode) {
+html += '<button class="btn btn-primary" id="launchAppBtn" data-slug="' + esc(p.slug) + '">Launch App (Run Code)</button>';
+}
+html += '</div>';
 }
 
 (p.sections || []).forEach(function (s) {
@@ -875,20 +881,13 @@ launchApp(this.dataset.slug);
 }
 }
 
-// Function to launch the app in a new tab
+// Function to launch the app code in a new tab
 function launchApp(slug) {
 var p = allProjects().filter(function(x) { return x.slug === slug; })[0];
-if (!p) return;
-
-if (p.appUrl) {
-// Open the provided URL
-window.open(p.appUrl, "_blank");
-} else if (p.appCode) {
-// Create a Blob from the raw code and open it
+if (!p || !p.appCode) return;
 var blob = new Blob([p.appCode], { type: "text/html" });
 var url = URL.createObjectURL(blob);
 window.open(url, "_blank");
-}
 }
 
 /* =========================================================
