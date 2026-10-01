@@ -427,12 +427,12 @@ appear on any device you visit this site from.
 <div class="field">
 <label for="p-appUrl">App URL (optional)</label>
 <input type="url" id="p-appUrl" name="appUrl" placeholder="https://my-cool-app.com" />
-<div class="hint">Link to the live app. We'll add https:// if you forget it.</div>
+<div class="hint">Link to a live website. We'll add https:// if you forget it.</div>
 </div>
 <div class="field">
 <label for="p-appCode">App Code (optional)</label>
 <textarea id="p-appCode" name="appCode" placeholder="Paste raw HTML/JS/CSS here to run it directly."></textarea>
-<div class="hint">If you paste code here, clicking 'Launch App' will open a new tab running this code.</div>
+<div class="hint">If you paste code here, clicking 'Launch App' will open a new tab running this exact code.</div>
 </div>
 <div class="field">
 <label for="p-does">What it does</label>
@@ -853,7 +853,11 @@ var url = p.appUrl;
 if (!/^https?:\/\//i.test(url)) url = "https://" + url;
 html += '<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener">Launch App ↗</a>';
 } else if (p.appCode) {
-html += '<button class="btn btn-primary" id="launchAppBtn" data-slug="' + esc(p.slug) + '">Launch App (Run Code)</button>';
+// Create a Blob URL so the link opens the raw HTML code directly in a new tab
+// This bypasses any popup blockers because it's a standard HTML link!
+var blob = new Blob([p.appCode], { type: "text/html" });
+var blobUrl = URL.createObjectURL(blob);
+html += '<a class="btn btn-primary" href="' + blobUrl + '" target="_blank" rel="noopener">Launch App (Run Code) ↗</a>';
 }
 html += '</div>';
 }
@@ -871,23 +875,6 @@ html += '<div class="actions">' +
 '</div>';
 html += '</section>';
 host.innerHTML = html;
-
-// Attach event listener to the new Launch App button
-var launchBtn = document.getElementById("launchAppBtn");
-if (launchBtn) {
-launchBtn.addEventListener("click", function() {
-launchApp(this.dataset.slug);
-});
-}
-}
-
-// Function to launch the app code in a new tab
-function launchApp(slug) {
-var p = allProjects().filter(function(x) { return x.slug === slug; })[0];
-if (!p || !p.appCode) return;
-var blob = new Blob([p.appCode], { type: "text/html" });
-var url = URL.createObjectURL(blob);
-window.open(url, "_blank");
 }
 
 /* =========================================================
