@@ -377,8 +377,8 @@ with the subject "Newsletter signup".
 <span class="eyebrow">Admin</span>
 <h1>Manage your projects.</h1>
 <p class="lede">
-Add, edit, and delete projects. Your changes save to this browser and can
-be exported as code to paste into the site permanently.
+Add, edit, and delete projects. Your changes save to the cloud and will
+appear on any device you visit this site from.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
@@ -446,7 +446,7 @@ be exported as code to paste into the site permanently.
 <!-- List custom -->
 <div class="admin-panel">
 <h3>Your custom projects</h3>
-<p class="sub">These are stored in this browser only.</p>
+<p class="sub">These are synced to the cloud (JSONBin).</p>
 <div class="admin-list" id="adminList"></div>
 </div>
 <!-- Export -->
@@ -454,7 +454,7 @@ be exported as code to paste into the site permanently.
 <h3>Export code</h3>
 <p class="sub">
 Copy this into the <code>BUILTIN_PROJECTS</code> array in the HTML
-file to make your projects permanent.
+file to make your projects permanent and load instantly.
 </p>
 <div class="cta-row">
 <button type="button" class="btn btn-ghost btn-sm" id="exportBtn">Generate export</button>
@@ -466,25 +466,12 @@ file to make your projects permanent.
 </div>
 <p class="status" id="exportStatus"></p>
 </div>
-<!-- Import -->
-<div class="admin-panel">
-<h3>Import JSON</h3>
-<p class="sub">Paste an exported array to load it back into this browser.</p>
-<div class="field">
-<textarea id="importArea" placeholder='[ { "slug": "my-project", "title": "My project", ... } ]'></textarea>
-</div>
-<div class="cta-row">
-<button type="button" class="btn btn-ghost btn-sm" id="importBtn">Import</button>
-<button type="button" class="btn btn-ghost btn-sm" id="clearAllBtn">Delete all custom</button>
-</div>
-<p class="status" id="importStatus"></p>
-</div>
 <div class="cta-row" style="margin-top:8px;">
 <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
 </div>
 <p class="note" style="margin-top:24px;">
-This admin runs entirely in your browser. Anyone can view the page, and
-the password is just a soft gate — real protection would need a server.
+This admin runs entirely in your browser but saves to JSONBin, so changes
+sync across devices. The password is just a soft gate.
 </p>
 </div>
 </section>
@@ -535,17 +522,18 @@ is open and I promise to be friendly.
 /* =========================================================
 CONFIG
 ========================================================= */
-// Change this password. It's a soft client-side gate only.
 var ADMIN_PASSWORD = "ethan";
-// Paste your Formspree endpoint here to make the newsletter live.
-// e.g. "https://formspree.io/f/xyzabcd" — get one free at formspree.io
-// Leave empty to run in demo mode (saves locally + mailto fallback).
 var NEWSLETTER_ENDPOINT = "";
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
+
 // ====== JSONBIN CLOUD SYNC ======
 var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq"; 
 var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";  
+// ================================
 
+/* =========================================================
+PROJECT DATA
+========================================================= */
 var BUILTIN_PROJECTS = [
 {
 slug: "math",
@@ -687,6 +675,8 @@ STORAGE + HELPERS
 var CUSTOM_KEY = "ethan_custom_projects";
 var ADMIN_KEY = "ethan_admin_authed";
 var NEWSLETTER_KEY = "ethan_newsletter_subs";
+var projectsCache = []; 
+
 function esc(s) {
 return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
 return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -698,18 +688,58 @@ return String(s || "").toLowerCase().trim()
 .replace(/^-+|-+$/g, "")
 .slice(0, 60) || "project";
 }
-function loadCustom() {
+
+// FETCH FROM CLOUD (JSONBIN) OR LOCALSTORAGE
+async function fetchProjects() {
+if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
+try {
+const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+headers: { "X-Master-Key": JSONBIN_API_KEY }
+});
+if (res.ok) {
+const data = await res.json();
+if (data.record && Array.isArray(data.record.projects)) {
+projectsCache = data.record.projects;
+} else if (Array.isArray(data.record)) {
+projectsCache = data.record;
+} else {
+projectsCache = [];
+}
+return;
+}
+} catch (e) {
+console.error("JSONBin fetch failed. Falling back to local storage.", e);
+}
+}
 try {
 var raw = localStorage.getItem(CUSTOM_KEY);
-return raw ? JSON.parse(raw) : [];
-} catch (e) { return []; }
+projectsCache = raw ? JSON.parse(raw) : [];
+} catch (e) { projectsCache = []; }
 }
-function saveCustom(list) {
-try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(list)); }
-catch (e) { /* ignore quota errors */ }
+
+// SAVE TO CLOUD (JSONBIN) AND LOCALSTORAGE
+async function saveProjects(list) {
+projectsCache = list;
+try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(list)); } catch (e) {}
+
+if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
+try {
+await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+method: "PUT",
+headers: {
+"Content-Type": "application/json",
+"X-Master-Key": JSONBIN_API_KEY
+},
+body: JSON.stringify({ projects: list }) 
+});
+} catch (e) {
+console.error("JSONBin save failed.", e);
 }
+}
+}
+
 function allProjects() {
-var custom = loadCustom();
+var custom = projectsCache;
 var customBySlug = {};
 custom.forEach(function (p) { customBySlug[p.slug] = p; });
 var result = [];
@@ -835,7 +865,6 @@ var navKey = isDetail ? "projects" : route;
 navLinks.forEach(function (l) {
 l.classList.toggle("active", l.dataset.nav === navKey);
 });
-// Re-render admin gate state when the admin view is shown
 if (route === "admin") renderAdmin();
 if (route === "newsletter") updateSubCount();
 window.scrollTo({ top: 0, behavior: "auto" });
@@ -934,7 +963,6 @@ status.textContent = "Network error. Try the email link below.";
 status.className = "status err";
 });
 } else {
-// Demo mode: save locally
 var subs = [];
 try { subs = JSON.parse(localStorage.getItem(NEWSLETTER_KEY) || "[]"); } catch (err) {}
 subs.push({ name: name, email: email, at: Date.now() });
@@ -975,7 +1003,7 @@ panel.style.display = "none";
 function renderAdminList() {
 var host = document.getElementById("adminList");
 if (!host) return;
-var custom = loadCustom();
+var custom = projectsCache;
 if (!custom.length) {
 host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>';
 return;
@@ -996,17 +1024,17 @@ host.querySelectorAll("[data-edit]").forEach(function (btn) {
 btn.addEventListener("click", function () { loadIntoForm(btn.dataset.edit); });
 });
 host.querySelectorAll("[data-delete]").forEach(function (btn) {
-btn.addEventListener("click", function () {
+btn.addEventListener("click", async function () {
 if (!confirm("Delete this project?")) return;
-var list = loadCustom().filter(function (p) { return p.slug !== btn.dataset.delete; });
-saveCustom(list);
+var list = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
+await saveProjects(list);
 renderAdminList();
 renderProjectLists();
 });
 });
 }
 function loadIntoForm(slug) {
-var p = loadCustom().filter(function (x) { return x.slug === slug; })[0];
+var p = projectsCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
 var f = document.getElementById("projectForm");
 f.elements.title.value = p.title || "";
@@ -1054,7 +1082,7 @@ gateStatus.className = "status err";
 var projectForm = document.getElementById("projectForm");
 var formStatus = document.getElementById("formStatus");
 if (projectForm) {
-projectForm.addEventListener("submit", function (e) {
+projectForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
 var title = (f.elements.title.value || "").trim();
@@ -1077,16 +1105,17 @@ if (learned.length) sections.push({ h: "What I learned", ul: learned });
 var project = {
 slug: slug, title: title, blurb: blurb, tags: tags, sections: sections
 };
-var custom = loadCustom();
+var custom = projectsCache.slice(); 
 var idx = -1;
 custom.forEach(function (p, i) { if (p.slug === slug) idx = i; });
 if (idx >= 0) custom[idx] = project;
 else custom.push(project);
-saveCustom(custom);
+
+await saveProjects(custom);
 clearForm();
 renderAdminList();
 renderProjectLists();
-formStatus.textContent = "Saved: " + title;
+formStatus.textContent = "Saved to cloud: " + title;
 formStatus.className = "status ok";
 setTimeout(function () { formStatus.textContent = ""; }, 2500);
 });
@@ -1098,14 +1127,13 @@ var exportArea = document.getElementById("exportArea");
 var exportStatus = document.getElementById("exportStatus");
 if (exportBtn) {
 exportBtn.addEventListener("click", function () {
-var custom = loadCustom();
+var custom = projectsCache;
 if (!custom.length) {
 exportArea.value = "";
 exportStatus.textContent = "No custom projects to export.";
 exportStatus.className = "status err";
 return;
 }
-// Wrap so it can be pasted straight into the BUILTIN_PROJECTS array.
 exportArea.value = JSON.stringify(custom, null, 2);
 exportStatus.textContent = "Paste this into the BUILTIN_PROJECTS array.";
 exportStatus.className = "status ok";
@@ -1135,7 +1163,7 @@ exportStatus.className = "status ok";
 var downloadBtn = document.getElementById("downloadBtn");
 if (downloadBtn) {
 downloadBtn.addEventListener("click", function () {
-var custom = loadCustom();
+var custom = projectsCache;
 var blob = new Blob([JSON.stringify(custom, null, 2)], { type: "application/json" });
 var url = URL.createObjectURL(blob);
 var a = document.createElement("a");
@@ -1145,46 +1173,6 @@ document.body.appendChild(a);
 a.click();
 a.remove();
 URL.revokeObjectURL(url);
-});
-}
-var importBtn = document.getElementById("importBtn");
-var importArea = document.getElementById("importArea");
-var importStatus = document.getElementById("importStatus");
-if (importBtn) {
-importBtn.addEventListener("click", function () {
-try {
-var parsed = JSON.parse(importArea.value);
-if (!Array.isArray(parsed)) throw new Error("Not an array");
-var cleaned = parsed.map(function (p) {
-return {
-slug: slugify(p.slug || p.title || "project"),
-title: String(p.title || "Untitled"),
-blurb: String(p.blurb || ""),
-tags: Array.isArray(p.tags) ? p.tags : [],
-sections: Array.isArray(p.sections) ? p.sections : []
-};
-});
-saveCustom(cleaned);
-renderAdminList();
-renderProjectLists();
-importStatus.textContent = "Imported " + cleaned.length + " project(s).";
-importStatus.className = "status ok";
-importArea.value = "";
-} catch (e) {
-importStatus.textContent = "Invalid JSON. Make sure it's an array of project objects.";
-importStatus.className = "status err";
-}
-});
-}
-var clearAllBtn = document.getElementById("clearAllBtn");
-if (clearAllBtn) {
-clearAllBtn.addEventListener("click", function () {
-if (!confirm("Delete ALL custom projects? This cannot be undone.")) return;
-saveCustom([]);
-renderAdminList();
-renderProjectLists();
-importStatus.textContent = "All custom projects deleted.";
-importStatus.className = "status ok";
 });
 }
 var logoutBtn = document.getElementById("logoutBtn");
@@ -1199,9 +1187,17 @@ renderAdmin();
 /* =========================================================
 INIT
 ========================================================= */
+async function init() {
+await fetchProjects();
 renderProjectLists();
 document.getElementById("year").textContent = new Date().getFullYear();
 updateSubCount();
+if (window.location.hash === "#admin") {
+renderAdmin();
+}
+}
+
+init();
 </script>
 </body>
 </html>
