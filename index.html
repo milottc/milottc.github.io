@@ -425,6 +425,16 @@ appear on any device you visit this site from.
 <div class="hint">Comma-separated.</div>
 </div>
 <div class="field">
+<label for="p-appUrl">App URL (optional)</label>
+<input type="url" id="p-appUrl" name="appUrl" placeholder="https://my-cool-app.com" />
+<div class="hint">Link to the live app (e.g., GitHub Pages).</div>
+</div>
+<div class="field">
+<label for="p-appCode">App Code (optional)</label>
+<textarea id="p-appCode" name="appCode" placeholder="Paste raw HTML/JS/CSS here to run it directly."></textarea>
+<div class="hint">If you paste code here, clicking 'Launch App' will open a new tab running this code.</div>
+</div>
+<div class="field">
 <label for="p-does">What it does</label>
 <textarea id="p-does" name="does" placeholder="A short paragraph describing the project."></textarea>
 </div>
@@ -540,6 +550,8 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
+appUrl: "https://example.com/math-solver", // Add your URL here
+appCode: "", // Or paste raw code here
 sections: [
 { h: "What it does", p: [
 "You type in an algebraic expression, and the solver breaks it down into a sequence of equivalent forms — combining like terms, distributing, isolating variables — so you can see why the answer is what it is, not just what the answer is."
@@ -562,6 +574,8 @@ slug: "anesthesia",
 title: "Anesthesia Dose Calculator",
 blurb: "A clinical decision-support tool for weight-based anesthetic dosages.",
 tags: ["Python", "Flask", "Health"],
+appUrl: "",
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "Enter a patient's weight and the drug you're working with, and the tool returns the recommended dose range in the right units. It flags values outside safe ranges and warns about common unit mix-ups."
@@ -584,6 +598,8 @@ slug: "flight",
 title: "Flight Plan Visualizer",
 blurb: "Plot flight plans on an interactive map with altitude profiles.",
 tags: ["React", "Mapbox", "API"],
+appUrl: "",
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "Drop in a flight plan file, and the tool draws the route on a map, shows planned altitudes along the way, and estimates fuel burn using a simplified model."
@@ -606,6 +622,8 @@ slug: "raccoon",
 title: "Raccoon Tracker",
 blurb: "A playful IoT dashboard that logs raccoon visits to a backyard feeder.",
 tags: ["Raspberry Pi", "Python", "IoT"],
+appUrl: "",
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "A motion sensor watches the feeder. When something moves, the Pi takes a timestamped snapshot, logs it, and pushes the event to a small web dashboard."
@@ -628,6 +646,8 @@ slug: "cheese",
 title: "Cheese Recommender",
 blurb: "A small ML model that suggests cheeses based on your flavour preferences.",
 tags: ["Python", "scikit-learn", "ML"],
+appUrl: "",
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "Rate a handful of cheeses you already know, and the model recommends a few new ones to try — leaning toward styles it thinks match your taste."
@@ -650,6 +670,8 @@ slug: "periodic",
 title: "Periodic Table Explorer",
 blurb: "An interactive periodic table with element data and a quiz mode.",
 tags: ["Vue", "Data Viz", "Education"],
+appUrl: "",
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "A full periodic table you can click around in. Each element shows its properties, electron configuration, and a short description. There's also a quiz mode."
@@ -822,6 +844,14 @@ p.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") +
 if (p.blurb) html += '<p class="lede">' + esc(p.blurb) + '</p>';
 html += '</header>';
 html += '<section class="project-body wrap">';
+
+// Add the Launch App button if URL or Code exists
+if (p.appUrl || p.appCode) {
+html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">' +
+'<button class="btn btn-primary" id="launchAppBtn" data-slug="' + esc(p.slug) + '">Launch App</button>' +
+'</div>';
+}
+
 (p.sections || []).forEach(function (s) {
 html += '<h2>' + esc(s.h) + '</h2>';
 if (s.p) s.p.forEach(function (par) { html += '<p>' + esc(par) + '</p>'; });
@@ -835,6 +865,30 @@ html += '<div class="actions">' +
 '</div>';
 html += '</section>';
 host.innerHTML = html;
+
+// Attach event listener to the new Launch App button
+var launchBtn = document.getElementById("launchAppBtn");
+if (launchBtn) {
+launchBtn.addEventListener("click", function() {
+launchApp(this.dataset.slug);
+});
+}
+}
+
+// Function to launch the app in a new tab
+function launchApp(slug) {
+var p = allProjects().filter(function(x) { return x.slug === slug; })[0];
+if (!p) return;
+
+if (p.appUrl) {
+// Open the provided URL
+window.open(p.appUrl, "_blank");
+} else if (p.appCode) {
+// Create a Blob from the raw code and open it
+var blob = new Blob([p.appCode], { type: "text/html" });
+var url = URL.createObjectURL(blob);
+window.open(url, "_blank");
+}
 }
 
 /* =========================================================
@@ -1041,6 +1095,8 @@ f.elements.title.value = p.title || "";
 f.elements.slug.value = p.slug || "";
 f.elements.blurb.value = p.blurb || "";
 f.elements.tags.value = (p.tags || []).join(", ");
+f.elements.appUrl.value = p.appUrl || "";
+f.elements.appCode.value = p.appCode || "";
 var does = "", how = [], learned = [];
 (p.sections || []).forEach(function (s) {
 if (s.h === "What it does") does = (s.p || []).join("\n");
@@ -1090,6 +1146,8 @@ var slug = (f.elements.slug.value || "").trim() || slugify(title);
 slug = slugify(slug);
 var blurb = (f.elements.blurb.value || "").trim();
 var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+var appUrl = (f.elements.appUrl.value || "").trim();
+var appCode = (f.elements.appCode.value || "").trim();
 var does = (f.elements.does.value || "").trim();
 var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
 var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
@@ -1103,7 +1161,7 @@ if (does) sections.push({ h: "What it does", p: [does] });
 if (how.length) sections.push({ h: "How it works", ul: how });
 if (learned.length) sections.push({ h: "What I learned", ul: learned });
 var project = {
-slug: slug, title: title, blurb: blurb, tags: tags, sections: sections
+slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections
 };
 var custom = projectsCache.slice(); 
 var idx = -1;
