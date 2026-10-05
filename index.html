@@ -340,36 +340,38 @@ about — math education, clinical support, aviation, and (yes) cheese.
 </section>
 </div>
 <!-- ============ NEWSLETTER ============ -->
+<!-- ============ NEWSLETTER (Updated) ============ -->
 <div class="view" id="view-newsletter" data-view="newsletter">
-<header class="hero wrap" style="padding-bottom:40px;">
-<span class="eyebrow">Newsletter</span>
-<h1>Occasional notes in your inbox.</h1>
-<p class="lede">
-Project updates, interesting math, and the occasional raccoon sighting.
-No spam, no schedule — just when I have something worth sharing.
-</p>
-</header>
-<section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-<form id="newsletterForm" novalidate>
-<div class="field">
-<label for="nl-name">Your name</label>
-<input type="text" id="nl-name" name="name" placeholder="Ethan" required />
-</div>
-<div class="field">
-<label for="nl-email">Email address</label>
-<input type="email" id="nl-email" name="email" placeholder="you@example.com" required />
-<div class="hint">I'll only use this to send you the newsletter.</div>
-</div>
-<button type="submit" class="btn btn-primary">Subscribe</button>
-<p class="status" id="newsletterStatus" aria-live="polite"></p>
-</form>
-<div class="note">
-Prefer email? Just write to
-<a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
-with the subject "Newsletter signup".
-</div>
-<p class="sub-count" id="subCount"></p>
-</section>
+  <header class="hero wrap" style="padding-bottom:40px;">
+    <span class="eyebrow">Newsletter</span>
+    <h1>Occasional notes in your inbox.</h1>
+    <p class="lede">
+      Project updates, interesting math, and the occasional raccoon sighting.
+      No spam, no schedule — just when I have something worth sharing.
+    </p>
+  </header>
+  <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
+    
+    <!-- Buttondown Signup Form -->
+    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
+      <div class="field">
+        <label for="bd-email">Email address</label>
+        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required />
+        <div class="hint">I'll only use this to send you the newsletter.</div>
+      </div>
+      <!-- Hidden field required by Buttondown -->
+      <input type="hidden" value="1" name="embed" />
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+    <!-- End Buttondown Form -->
+
+    <div class="note">
+      Prefer email? Just write to
+      <a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
+      with the subject "Newsletter signup".
+    </div>
+    <p class="sub-count" id="subCount"></p>
+  </section>
 </div>
 <!-- ============ ADMIN ============ -->
 <div class="view" id="view-admin" data-view="admin">
