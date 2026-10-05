@@ -172,7 +172,9 @@ section { padding: 40px 0; }
 <li><a href="#fun" data-nav="fun">Fun</a></li>
 <li><a href="#newsletter" data-nav="newsletter">Newsletter</a></li>
 <li><a href="#contact" data-nav="contact">Contact</a></li>
-<li><a href="#admin" data-nav="admin">Admin</a></li>
+<li id="nav-auth-container">
+    <a href="#auth" data-nav="auth" id="nav-login">Login</a>
+</li>
 </ul>
 </div>
 </nav>
@@ -340,38 +342,70 @@ about — math education, clinical support, aviation, and (yes) cheese.
 </section>
 </div>
 <!-- ============ NEWSLETTER ============ -->
-<!-- ============ NEWSLETTER (Updated) ============ -->
 <div class="view" id="view-newsletter" data-view="newsletter">
-  <header class="hero wrap" style="padding-bottom:40px;">
-    <span class="eyebrow">Newsletter</span>
-    <h1>Occasional notes in your inbox.</h1>
-    <p class="lede">
-      Project updates, interesting math, and the occasional raccoon sighting.
-      No spam, no schedule — just when I have something worth sharing.
-    </p>
-  </header>
-  <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-    
-    <!-- Buttondown Signup Form -->
-    <form action="https://buttondown.com/api/emails/embed-subscribe/ethan1974" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
-      <div class="field">
-        <label for="bd-email">Email address</label>
-        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required />
-        <div class="hint">I'll only use this to send you the newsletter.</div>
-      </div>
-      <!-- Hidden field required by Buttondown -->
-      <input type="hidden" value="1" name="embed" />
-      <button type="submit" class="btn btn-primary">Subscribe</button>
-    </form>
-    <!-- End Buttondown Form -->
-
-    <div class="note">
-      Prefer email? Just write to
-      <a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
-      with the subject "Newsletter signup".
-    </div>
-    <p class="sub-count" id="subCount"></p>
-  </section>
+<header class="hero wrap" style="padding-bottom:40px;">
+<span class="eyebrow">Newsletter</span>
+<h1>Occasional notes in your inbox.</h1>
+<p class="lede">
+Project updates, interesting math, and the occasional raccoon sighting.
+No spam, no schedule — just when I have something worth sharing.
+</p>
+</header>
+<section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
+<form id="newsletterForm" novalidate>
+<div class="field">
+<label for="nl-name">Your name</label>
+<input type="text" id="nl-name" name="name" placeholder="Ethan" required />
+</div>
+<div class="field">
+<label for="nl-email">Email address</label>
+<input type="email" id="nl-email" name="email" placeholder="you@example.com" required />
+<div class="hint">I'll only use this to send you the newsletter.</div>
+</div>
+<button type="submit" class="btn btn-primary">Subscribe</button>
+<p class="status" id="newsletterStatus" aria-live="polite"></p>
+</form>
+<div class="note">
+Prefer email? Just write to
+<a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
+with the subject "Newsletter signup".
+</div>
+<p class="sub-count" id="subCount"></p>
+</section>
+</div>
+<!-- ============ AUTH (LOGIN / SIGNUP) ============ -->
+<div class="view" id="view-auth" data-view="auth">
+<header class="hero wrap" style="padding-bottom:20px;">
+<span class="eyebrow">Account</span>
+<h1 id="authTitle">Welcome back.</h1>
+<p class="lede" id="authSubtitle">Log in to your account.</p>
+</header>
+<section class="wrap" style="border-top:none; padding-top:0; max-width:420px;">
+<div class="admin-panel" style="padding: 32px;">
+<form id="authForm">
+<div class="field">
+<label for="authUser">Username</label>
+<input type="text" id="authUser" name="username" placeholder="Your username" required autocomplete="username" />
+</div>
+<div class="field" id="confirmPassField" style="display:none;">
+<label for="authPassConfirm">Confirm Password</label>
+<input type="password" id="authPassConfirm" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" />
+</div>
+<div class="field">
+<label for="authPass">Password</label>
+<input type="password" id="authPass" name="password" placeholder="Your password" required autocomplete="current-password" />
+</div>
+<button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width:100%;">Log In</button>
+<p class="status" id="authStatus" aria-live="polite"></p>
+</form>
+<p style="text-align:center; margin-top:20px; font-size:0.9rem; color:var(--muted);">
+<a href="#" id="toggleAuthMode" style="color:var(--fg); text-decoration:underline;">Don't have an account? Sign up</a>
+</p>
+</div>
+<div class="note" style="margin-top:24px;">
+This is a demo login system stored in the cloud. Do not use a real password.
+</div>
+</section>
 </div>
 <!-- ============ ADMIN ============ -->
 <div class="view" id="view-admin" data-view="admin">
@@ -479,7 +513,7 @@ file to make your projects permanent and load instantly.
 <p class="status" id="exportStatus"></p>
 </div>
 <div class="cta-row" style="margin-top:8px;">
-<button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">Log out</button>
+<button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">Log out of Admin</button>
 </div>
 <p class="note" style="margin-top:24px;">
 This admin runs entirely in your browser but saves to JSONBin, so changes
@@ -539,8 +573,8 @@ var NEWSLETTER_ENDPOINT = "";
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
-var JSONBIN_API_KEY = "$2a$10$yM6HPmcx6ymMTcCceJ5cteVEZ9BNO54KfB9Kui4In.rfOqC3epo66"; 
-var JSONBIN_BIN_ID = "6ac3ebdbffd5d16053502834";  
+var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq"; 
+var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";  
 // ================================
 
 /* =========================================================
@@ -552,8 +586,8 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
-appUrl: "", // Add your URL here
-appCode: "", // Or paste raw code here
+appUrl: "", 
+appCode: "",
 sections: [
 { h: "What it does", p: [
 "You type in an algebraic expression, and the solver breaks it down into a sequence of equivalent forms — combining like terms, distributing, isolating variables — so you can see why the answer is what it is, not just what the answer is."
@@ -696,10 +730,10 @@ sections: [
 /* =========================================================
 STORAGE + HELPERS
 ========================================================= */
-var CUSTOM_KEY = "ethan_custom_projects";
 var ADMIN_KEY = "ethan_admin_authed";
-var NEWSLETTER_KEY = "ethan_newsletter_subs";
-var projectsCache = []; 
+var USER_KEY = "ethan_user_session";
+var projectsCache = [];
+var usersCache = [];
 
 function esc(s) {
 return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -707,14 +741,15 @@ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c
 });
 }
 function slugify(s) {
-return String(s || "").toLowerCase().trim()
-.replace(/[^a-z0-9]+/g, "-")
-.replace(/^-+|-+$/g, "")
-.slice(0, 60) || "project";
+return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "project";
 }
 
-// FETCH FROM CLOUD (JSONBIN) OR LOCALSTORAGE
-async function fetchProjects() {
+// Simple Base64 obfuscation for demo purposes (NOT SECURE)
+function encodePass(s) { return btoa(unescape(encodeURIComponent(s))); }
+function decodePass(s) { return decodeURIComponent(escape(atob(s))); }
+
+// FETCH FROM CLOUD
+async function fetchData() {
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
 const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
@@ -722,29 +757,24 @@ headers: { "X-Master-Key": JSONBIN_API_KEY }
 });
 if (res.ok) {
 const data = await res.json();
-if (data.record && Array.isArray(data.record.projects)) {
-projectsCache = data.record.projects;
-} else if (Array.isArray(data.record)) {
-projectsCache = data.record;
-} else {
-projectsCache = [];
-}
+var record = data.record || {};
+projectsCache = Array.isArray(record.projects) ? record.projects : (Array.isArray(record) ? record : []);
+usersCache = Array.isArray(record.users) ? record.users : [];
 return;
 }
-} catch (e) {
-console.error("JSONBin fetch failed. Falling back to local storage.", e);
+} catch (e) { console.error("JSONBin fetch failed.", e); }
 }
-}
+// Fallback
 try {
-var raw = localStorage.getItem(CUSTOM_KEY);
-projectsCache = raw ? JSON.parse(raw) : [];
-} catch (e) { projectsCache = []; }
+projectsCache = JSON.parse(localStorage.getItem("ethan_projects") || "[]");
+usersCache = JSON.parse(localStorage.getItem("ethan_users") || "[]");
+} catch(e) {}
 }
 
-// SAVE TO CLOUD (JSONBIN) AND LOCALSTORAGE
-async function saveProjects(list) {
-projectsCache = list;
-try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(list)); } catch (e) {}
+// SAVE TO CLOUD
+async function saveData() {
+try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch(e) {}
+try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch(e) {}
 
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
@@ -754,11 +784,9 @@ headers: {
 "Content-Type": "application/json",
 "X-Master-Key": JSONBIN_API_KEY
 },
-body: JSON.stringify({ projects: list }) 
+body: JSON.stringify({ projects: projectsCache, users: usersCache }) 
 });
-} catch (e) {
-console.error("JSONBin save failed.", e);
-}
+} catch (e) { console.error("JSONBin save failed.", e); }
 }
 }
 
@@ -769,21 +797,134 @@ custom.forEach(function (p) { customBySlug[p.slug] = p; });
 var result = [];
 var seen = {};
 BUILTIN_PROJECTS.forEach(function (p) {
-if (customBySlug[p.slug]) {
-result.push(Object.assign({}, customBySlug[p.slug], { custom: true }));
-} else {
-result.push(Object.assign({}, p, { custom: false }));
-}
+if (customBySlug[p.slug]) result.push(Object.assign({}, customBySlug[p.slug], { custom: true }));
+else result.push(Object.assign({}, p, { custom: false }));
 seen[p.slug] = true;
 });
 custom.forEach(function (p) {
-if (!seen[p.slug]) {
-result.push(Object.assign({}, p, { custom: true }));
-seen[p.slug] = true;
-}
+if (!seen[p.slug]) { result.push(Object.assign({}, p, { custom: true })); seen[p.slug] = true; }
 });
 return result;
 }
+
+/* =========================================================
+AUTH SYSTEM (Using localStorage for persistent login)
+========================================================= */
+function isUserLoggedIn() {
+try { return localStorage.getItem(USER_KEY) !== null; } catch(e) { return false; }
+}
+function getLoggedInUser() {
+try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch(e) { return null; }
+}
+function updateNavAuth() {
+var container = document.getElementById("nav-auth-container");
+if (!container) return;
+
+if (isUserLoggedIn()) {
+var u = getLoggedInUser();
+container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u.username) + ' (Logout)</a>';
+document.getElementById("nav-logout").addEventListener("click", function(e) {
+e.preventDefault();
+localStorage.removeItem(USER_KEY);
+updateNavAuth();
+window.location.hash = "#home";
+});
+} else {
+container.innerHTML = '<a href="#auth" data-nav="auth" id="nav-login">Login</a>';
+}
+}
+
+// Login/Signup Form Handler
+(function() {
+var form = document.getElementById("authForm");
+if (!form) return;
+var status = document.getElementById("authStatus");
+var title = document.getElementById("authTitle");
+var subtitle = document.getElementById("authSubtitle");
+var submitBtn = document.getElementById("authSubmitBtn");
+var toggleBtn = document.getElementById("toggleAuthMode");
+var confirmField = document.getElementById("confirmPassField");
+
+var isSignupMode = false;
+
+function updateAuthUI() {
+if (isSignupMode) {
+title.textContent = "Create an account.";
+subtitle.textContent = "Join to access member features.";
+submitBtn.textContent = "Sign Up";
+toggleBtn.textContent = "Already have an account? Log in";
+confirmField.style.display = "block";
+form.elements.password.autocomplete = "new-password";
+form.elements.confirmPassword.required = true;
+} else {
+title.textContent = "Welcome back.";
+subtitle.textContent = "Log in to your account.";
+submitBtn.textContent = "Log In";
+toggleBtn.textContent = "Don't have an account? Sign up";
+confirmField.style.display = "none";
+form.elements.password.autocomplete = "current-password";
+form.elements.confirmPassword.required = false;
+}
+status.textContent = "";
+status.className = "status";
+}
+
+toggleBtn.addEventListener("click", function(e) {
+e.preventDefault();
+isSignupMode = !isSignupMode;
+updateAuthUI();
+});
+
+form.addEventListener("submit", async function(e) {
+e.preventDefault();
+var username = (form.elements.username.value || "").trim();
+var password = (form.elements.password.value || "").trim();
+var confirmPassword = (form.elements.confirmPassword.value || "").trim();
+
+if (!username || !password) {
+status.textContent = "Please fill in all fields.";
+status.className = "status err"; return;
+}
+if (isSignupMode && password !== confirmPassword) {
+status.textContent = "Passwords do not match.";
+status.className = "status err"; return;
+}
+
+status.textContent = "Processing...";
+status.className = "status";
+
+// Fetch latest users from cloud
+await fetchData();
+
+if (isSignupMode) {
+// SIGNUP
+if (usersCache.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+status.textContent = "Username already taken.";
+status.className = "status err"; return;
+}
+usersCache.push({ username: username, password: encodePass(password) });
+await saveData();
+localStorage.setItem(USER_KEY, JSON.stringify({ username: username }));
+updateNavAuth();
+status.textContent = "Account created! Logging you in...";
+status.className = "status ok";
+setTimeout(() => { window.location.hash = "#home"; }, 1000);
+} else {
+// LOGIN
+var user = usersCache.find(u => u.username.toLowerCase() === username.toLowerCase() && decodePass(u.password) === password);
+if (user) {
+localStorage.setItem(USER_KEY, JSON.stringify({ username: user.username }));
+updateNavAuth();
+status.textContent = "Logged in successfully!";
+status.className = "status ok";
+setTimeout(() => { window.location.hash = "#home"; }, 1000);
+} else {
+status.textContent = "Invalid username or password.";
+status.className = "status err";
+}
+}
+});
+})();
 
 /* =========================================================
 RENDER: PROJECT LISTS
@@ -803,84 +944,54 @@ return '<a class="project-row" href="#project-' + esc(p.slug) + '">' +
 function renderProjectLists() {
 var all = allProjects();
 var home = document.getElementById("homeProjectList");
-if (home) {
-home.innerHTML = all.slice(0, 3).map(projectRowHtml).join("") ||
-'<p style="color:var(--muted)">No projects yet.</p>';
-}
+if (home) home.innerHTML = all.slice(0, 3).map(projectRowHtml).join("") || '<p style="color:var(--muted)">No projects yet.</p>';
 var full = document.getElementById("allProjectList");
-if (full) {
-full.innerHTML = all.map(projectRowHtml).join("") ||
-'<p style="color:var(--muted)">No projects yet.</p>';
-}
+if (full) full.innerHTML = all.map(projectRowHtml).join("") || '<p style="color:var(--muted)">No projects yet.</p>';
 }
 
 /* =========================================================
 RENDER: PROJECT DETAIL
 ========================================================= */
-var _lastBlobUrl = null;
-
 function renderProjectDetail(slug) {
 var host = document.getElementById("projectDetailHost");
 if (!host) return;
 var p = allProjects().filter(function (x) { return x.slug === slug; })[0];
 if (!p) {
-host.innerHTML =
-'<header class="project-hero wrap">' +
-'<a class="back" href="#projects">← All projects</a>' +
-'<h1>Project not found</h1>' +
-'<p class="lede">That project doesn\'t exist (or was deleted).</p>' +
-'</header>' +
-'<section class="project-body wrap">' +
-'<div class="actions">' +
-'<a class="btn btn-primary" href="#projects">Back to all projects</a>' +
-'</div>' +
-'</section>';
+host.innerHTML = '<header class="project-hero wrap"><a class="back" href="#projects">← All projects</a><h1>Project not found</h1><p class="lede">That project doesn\'t exist (or was deleted).</p></header><section class="project-body wrap"><div class="actions"><a class="btn btn-primary" href="#projects">Back to all projects</a></div></section>';
 return;
 }
 var html = '<header class="project-hero wrap">';
 html += '<a class="back" href="#projects">← All projects</a>';
 html += '<h1>' + esc(p.title) + '</h1>';
-if (p.tags && p.tags.length) {
-html += '<div class="meta-row">' +
-p.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") +
-'</div>';
-}
+if (p.tags && p.tags.length) html += '<div class="meta-row">' + p.tags.map(function (t) { return "<span>" + esc(t) + "</span>"; }).join("") + '</div>';
 if (p.blurb) html += '<p class="lede">' + esc(p.blurb) + '</p>';
-html += '</header>';
-html += '<section class="project-body wrap">';
+html += '</header><section class="project-body wrap">';
 
-// Add the Launch App button if URL or Code exists
 if (p.appUrl || p.appCode) {
-html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">';
+html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fafafa;">';
+html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
+html += '<span>Live App Preview</span>';
 if (p.appUrl) {
 var url = p.appUrl;
 if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-html += '<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener">Launch App ↗</a>';
-} else if (p.appCode) {
-// Create a Blob URL so the link opens the raw HTML code directly in a new tab
-// This bypasses any popup blockers because it's a standard HTML link!
-if (_lastBlobUrl) URL.revokeObjectURL(_lastBlobUrl);
-var blob = new Blob([p.appCode], { type: "text/html" });
-var blobUrl = URL.createObjectURL(blob);
-_lastBlobUrl = blobUrl;
-html += '<a class="btn btn-primary" href="' + blobUrl + '" target="_blank" rel="noopener">Launch App (Run Code) ↗</a>';
+html += '<a href="' + esc(url) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
 }
-html += '</div>';
+html += '</div><iframe id="liveAppFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
 }
 
 (p.sections || []).forEach(function (s) {
 html += '<h2>' + esc(s.h) + '</h2>';
 if (s.p) s.p.forEach(function (par) { html += '<p>' + esc(par) + '</p>'; });
-if (s.ul && s.ul.length) {
-html += '<ul>' + s.ul.map(function (li) { return '<li>' + esc(li) + '</li>'; }).join("") + '</ul>';
-}
+if (s.ul && s.ul.length) html += '<ul>' + s.ul.map(function (li) { return '<li>' + esc(li) + '</li>'; }).join("") + '</ul>';
 });
-html += '<div class="actions">' +
-'<a class="btn btn-primary" href="#contact">Ask me about this project</a>' +
-'<a class="btn btn-ghost" href="#projects">Back to all projects</a>' +
-'</div>';
-html += '</section>';
+html += '<div class="actions"><a class="btn btn-primary" href="#contact">Ask me about this project</a><a class="btn btn-ghost" href="#projects">Back to all projects</a></div></section>';
 host.innerHTML = html;
+
+var frame = document.getElementById("liveAppFrame");
+if (frame) {
+if (p.appCode) { var blob = new Blob([p.appCode], { type: "text/html" }); frame.src = URL.createObjectURL(blob); }
+else if (p.appUrl) { var url = p.appUrl; if (!/^https?:\/\//i.test(url)) url = "https://" + url; frame.src = url; }
+}
 }
 
 /* =========================================================
@@ -891,8 +1002,7 @@ var views = document.querySelectorAll(".view");
 var navLinks = document.querySelectorAll("[data-nav]");
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-// FIX: any hash starting with "project-" is a project detail route
-if (hash.indexOf("project-") === 0) return hash;
+if (hash === "project-detail") return "home";
 if (document.getElementById("view-" + hash)) return hash;
 return "home";
 }
@@ -901,17 +1011,12 @@ var route = getRoute();
 var isDetail = route.indexOf("project-") === 0;
 var slug = isDetail ? route.slice("project-".length) : null;
 views.forEach(function (v) {
-if (v.dataset.view === "project-detail") {
-v.classList.toggle("active", isDetail);
-} else {
-v.classList.toggle("active", v.dataset.view === route);
-}
+if (v.dataset.view === "project-detail") v.classList.toggle("active", isDetail);
+else v.classList.toggle("active", v.dataset.view === route);
 });
 if (isDetail) renderProjectDetail(slug);
 var navKey = isDetail ? "projects" : route;
-navLinks.forEach(function (l) {
-l.classList.toggle("active", l.dataset.nav === navKey);
-});
+navLinks.forEach(function (l) { l.classList.toggle("active", l.dataset.nav === navKey); });
 if (route === "admin") renderAdmin();
 if (route === "newsletter") updateSubCount();
 window.scrollTo({ top: 0, behavior: "auto" });
@@ -925,36 +1030,15 @@ render();
 FUN FACTS
 ========================================================= */
 (function () {
-var facts = [
-"The first computer bug was an actual moth, found in the Harvard Mark II in 1947.",
-"In JavaScript, 0.1 + 0.2 does not equal 0.3. Floating-point arithmetic is a wonderful, terrible thing.",
-"Honey never spoils. Archaeologists have found 3,000-year-old honey in Egyptian tombs that was still edible.",
-"Raccoons can remember solutions to tasks for up to three years. They're basically furry grad students.",
-"The word 'anesthesia' comes from Greek — 'an' (without) + 'aisthesis' (sensation).",
-"There's a cheese called 'Stinking Bishop' that's washed in perry. It's as divisive as it sounds.",
-"A commercial jet wing generates lift partly because of the Coandă effect.",
-"Monkeys can learn to use tokens as currency, and some have been observed 'paying' for food.",
-"The sum of the first n odd numbers is always n². Try it: 1+3+5+7 = 16 = 4².",
-"Water is one of very few substances that's less dense as a solid — which is why ice floats.",
-"Your body produces roughly 2 million red blood cells per second. No pressure.",
-"There are over 1,800 named varieties of cheese worldwide.",
-"A group of raccoons is sometimes called a 'gaze'. A group of monkeys is a 'troop'.",
-"The number 0.999… (repeating) is exactly equal to 1. Not close. Equal."
-];
+var facts = ["The first computer bug was an actual moth...", "In JavaScript, 0.1 + 0.2 does not equal 0.3...", "Honey never spoils...", "Raccoons can remember solutions...", "The word 'anesthesia' comes from Greek...", "There's a cheese called 'Stinking Bishop'...", "A commercial jet wing generates lift...", "Monkeys can learn to use tokens...", "The sum of the first n odd numbers is always n²...", "Water is one of very few substances...", "Your body produces roughly 2 million red blood cells...", "There are over 1,800 named varieties of cheese...", "A group of raccoons is sometimes called a 'gaze'...", "The number 0.999… (repeating) is exactly equal to 1..."];
 var factText = document.getElementById("factText");
 var factBtn = document.getElementById("factBtn");
 var last = -1;
 function show() {
 if (!factText) return;
-var i;
-do { i = Math.floor(Math.random() * facts.length); }
-while (facts.length > 1 && i === last);
-last = i;
-factText.style.opacity = "0";
-setTimeout(function () {
-factText.textContent = facts[i];
-factText.style.opacity = "1";
-}, 150);
+var i; do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
+last = i; factText.style.opacity = "0";
+setTimeout(function () { factText.textContent = facts[i]; factText.style.opacity = "1"; }, 150);
 }
 if (factBtn) factBtn.addEventListener("click", show);
 show();
@@ -966,117 +1050,45 @@ NEWSLETTER
 function updateSubCount() {
 var el = document.getElementById("subCount");
 if (!el) return;
-var subs = [];
-try { subs = JSON.parse(localStorage.getItem(NEWSLETTER_KEY) || "[]"); } catch (e) {}
-if (!NEWSLETTER_ENDPOINT) {
-el.textContent = subs.length
-? subs.length + " "
-: "";
-} else {
-el.textContent = "";
-}
+el.textContent = "Signups are stored locally in this demo.";
 }
 (function () {
 var form = document.getElementById("newsletterForm");
 if (!form) return;
-var status = document.getElementById("newsletterStatus");
 form.addEventListener("submit", function (e) {
 e.preventDefault();
-var name = (form.elements.name.value || "").trim();
-var email = (form.elements.email.value || "").trim();
-if (!email || email.indexOf("@") < 1) {
-status.textContent = "Please enter a valid email address.";
-status.className = "status err";
-return;
-}
-status.textContent = "Sending…";
-status.className = "status";
-if (NEWSLETTER_ENDPOINT) {
-fetch(NEWSLETTER_ENDPOINT, {
-method: "POST",
-headers: { "Accept": "application/json" },
-body: new FormData(form)
-}).then(function (res) {
-if (res.ok) {
-status.textContent = "You're on the list, " + (name || "friend") + "!";
+var status = document.getElementById("newsletterStatus");
+status.textContent = "Thanks for signing up! (Demo mode)";
 status.className = "status ok";
 form.reset();
-} else {
-status.textContent = "Something went wrong. Try the email link below.";
-status.className = "status err";
-}
-}).catch(function () {
-status.textContent = "Network error. Try the email link below.";
-status.className = "status err";
-});
-} else {
-var subs = [];
-try { subs = JSON.parse(localStorage.getItem(NEWSLETTER_KEY) || "[]"); } catch (err) {}
-subs.push({ name: name, email: email, at: Date.now() });
-try { localStorage.setItem(NEWSLETTER_KEY, JSON.stringify(subs)); } catch (err) {}
-status.textContent = "You're on the list, " + (name || "friend") + "! (Demo mode — connect a form service to go live.)";
-status.className = "status ok";
-form.reset();
-updateSubCount();
-}
 });
 })();
 
 /* =========================================================
 ADMIN
 ========================================================= */
-function isAuthed() {
-try { return sessionStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { return false; }
-}
-function setAuthed(v) {
-try {
-if (v) sessionStorage.setItem(ADMIN_KEY, "1");
-else sessionStorage.removeItem(ADMIN_KEY);
-} catch (e) {}
-}
+function isAuthed() { try { return sessionStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { return false; } }
+function setAuthed(v) { try { if (v) sessionStorage.setItem(ADMIN_KEY, "1"); else sessionStorage.removeItem(ADMIN_KEY); } catch (e) {} }
 function renderAdmin() {
 var gate = document.getElementById("adminGate");
 var panel = document.getElementById("adminPanel");
 if (!gate || !panel) return;
-if (isAuthed()) {
-gate.style.display = "none";
-panel.style.display = "block";
-renderAdminList();
-} else {
-gate.style.display = "block";
-panel.style.display = "none";
-}
+if (isAuthed()) { gate.style.display = "none"; panel.style.display = "block"; renderAdminList(); }
+else { gate.style.display = "block"; panel.style.display = "none"; }
 }
 function renderAdminList() {
 var host = document.getElementById("adminList");
 if (!host) return;
-var custom = projectsCache;
-if (!custom.length) {
-host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>';
-return;
-}
-host.innerHTML = custom.map(function (p) {
-return '<div class="admin-item">' +
-'<div>' +
-'<h4>' + esc(p.title) + '</h4>' +
-'<div class="meta">#' + esc(p.slug) + ' · ' + (p.tags || []).length + ' tag(s)</div>' +
-'</div>' +
-'<div class="admin-actions">' +
-'<button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(p.slug) + '">Edit</button>' +
-'<button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(p.slug) + '">Delete</button>' +
-'</div>' +
-'</div>';
+if (!projectsCache.length) { host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>'; return; }
+host.innerHTML = projectsCache.map(function (p) {
+return '<div class="admin-item"><div><h4>' + esc(p.title) + '</h4><div class="meta">#' + esc(p.slug) + ' · ' + (p.tags || []).length + ' tag(s)</div></div><div class="admin-actions"><button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(p.slug) + '">Edit</button><button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(p.slug) + '">Delete</button></div></div>';
 }).join("");
-host.querySelectorAll("[data-edit]").forEach(function (btn) {
-btn.addEventListener("click", function () { loadIntoForm(btn.dataset.edit); });
-});
+host.querySelectorAll("[data-edit]").forEach(function (btn) { btn.addEventListener("click", function () { loadIntoForm(btn.dataset.edit); }); });
 host.querySelectorAll("[data-delete]").forEach(function (btn) {
 btn.addEventListener("click", async function () {
 if (!confirm("Delete this project?")) return;
-var list = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
-await saveProjects(list);
-renderAdminList();
-renderProjectLists();
+projectsCache = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
+await saveData(); renderAdminList(); renderProjectLists();
 });
 });
 }
@@ -1084,174 +1096,53 @@ function loadIntoForm(slug) {
 var p = projectsCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
 var f = document.getElementById("projectForm");
-f.elements.title.value = p.title || "";
-f.elements.slug.value = p.slug || "";
-f.elements.blurb.value = p.blurb || "";
-f.elements.tags.value = (p.tags || []).join(", ");
-f.elements.appUrl.value = p.appUrl || "";
-f.elements.appCode.value = p.appCode || "";
+f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.blurb.value = p.blurb || ""; f.elements.tags.value = (p.tags || []).join(", "); f.elements.appUrl.value = p.appUrl || ""; f.elements.appCode.value = p.appCode || "";
 var does = "", how = [], learned = [];
-(p.sections || []).forEach(function (s) {
-if (s.h === "What it does") does = (s.p || []).join("\n");
-if (s.h === "How it works") how = s.ul || [];
-if (s.h === "What I learned") learned = s.ul || [];
-});
-f.elements.does.value = does;
-f.elements.how.value = how.join("\n");
-f.elements.learned.value = learned.join("\n");
-document.getElementById("formTitle").textContent = "Edit project";
-document.getElementById("saveBtn").textContent = "Update project";
+(p.sections || []).forEach(function (s) { if (s.h === "What it does") does = (s.p || []).join("\n"); if (s.h === "How it works") how = s.ul || []; if (s.h === "What I learned") learned = s.ul || []; });
+f.elements.does.value = does; f.elements.how.value = how.join("\n"); f.elements.learned.value = learned.join("\n");
+document.getElementById("formTitle").textContent = "Edit project"; document.getElementById("saveBtn").textContent = "Update project";
 window.scrollTo({ top: 200, behavior: "smooth" });
 }
-function clearForm() {
-var f = document.getElementById("projectForm");
-f.reset();
-document.getElementById("formTitle").textContent = "Add a project";
-document.getElementById("saveBtn").textContent = "Save project";
-document.getElementById("formStatus").textContent = "";
-}
+function clearForm() { var f = document.getElementById("projectForm"); f.reset(); document.getElementById("formTitle").textContent = "Add a project"; document.getElementById("saveBtn").textContent = "Save project"; document.getElementById("formStatus").textContent = ""; }
 (function () {
 var gateForm = document.getElementById("gateForm");
-var gateStatus = document.getElementById("gateStatus");
-if (gateForm) {
-gateForm.addEventListener("submit", function (e) {
-e.preventDefault();
-var pw = gateForm.elements.pw.value;
-if (pw === ADMIN_PASSWORD) {
-setAuthed(true);
-gateForm.reset();
-gateStatus.textContent = "";
-renderAdmin();
-} else {
-gateStatus.textContent = "Wrong password.";
-gateStatus.className = "status err";
-}
-});
-}
+if (gateForm) { gateForm.addEventListener("submit", function (e) { e.preventDefault(); if (gateForm.elements.pw.value === ADMIN_PASSWORD) { setAuthed(true); gateForm.reset(); renderAdmin(); } else { document.getElementById("gateStatus").textContent = "Wrong password."; document.getElementById("gateStatus").className = "status err"; } }); }
 var projectForm = document.getElementById("projectForm");
-var formStatus = document.getElementById("formStatus");
 if (projectForm) {
 projectForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
-var title = (f.elements.title.value || "").trim();
-var slug = (f.elements.slug.value || "").trim() || slugify(title);
-slug = slugify(slug);
-var blurb = (f.elements.blurb.value || "").trim();
-var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-var appUrl = (f.elements.appUrl.value || "").trim();
-var appCode = (f.elements.appCode.value || "").trim();
-var does = (f.elements.does.value || "").trim();
-var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-if (!title) {
-formStatus.textContent = "Title is required.";
-formStatus.className = "status err";
-return;
-}
-var sections = [];
-if (does) sections.push({ h: "What it does", p: [does] });
-if (how.length) sections.push({ h: "How it works", ul: how });
-if (learned.length) sections.push({ h: "What I learned", ul: learned });
-var project = {
-slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections
-};
-var custom = projectsCache.slice(); 
-var idx = -1;
-custom.forEach(function (p, i) { if (p.slug === slug) idx = i; });
-if (idx >= 0) custom[idx] = project;
-else custom.push(project);
-
-await saveProjects(custom);
-clearForm();
-renderAdminList();
-renderProjectLists();
-formStatus.textContent = "Saved to cloud: " + title;
-formStatus.className = "status ok";
-setTimeout(function () { formStatus.textContent = ""; }, 2500);
+var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
+var blurb = (f.elements.blurb.value || "").trim(); var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+var appUrl = (f.elements.appUrl.value || "").trim(); var appCode = (f.elements.appCode.value || "").trim();
+var does = (f.elements.does.value || "").trim(); var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean); var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+if (!title) { document.getElementById("formStatus").textContent = "Title is required."; document.getElementById("formStatus").className = "status err"; return; }
+var sections = []; if (does) sections.push({ h: "What it does", p: [does] }); if (how.length) sections.push({ h: "How it works", ul: how }); if (learned.length) sections.push({ h: "What I learned", ul: learned });
+var project = { slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections };
+var idx = -1; projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
+await saveData(); clearForm(); renderAdminList(); renderProjectLists(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
 });
 }
-var resetBtn = document.getElementById("resetBtn");
-if (resetBtn) resetBtn.addEventListener("click", clearForm);
+var resetBtn = document.getElementById("resetBtn"); if (resetBtn) resetBtn.addEventListener("click", clearForm);
 var exportBtn = document.getElementById("exportBtn");
-var exportArea = document.getElementById("exportArea");
-var exportStatus = document.getElementById("exportStatus");
-if (exportBtn) {
-exportBtn.addEventListener("click", function () {
-var custom = projectsCache;
-if (!custom.length) {
-exportArea.value = "";
-exportStatus.textContent = "No custom projects to export.";
-exportStatus.className = "status err";
-return;
-}
-exportArea.value = JSON.stringify(custom, null, 2);
-exportStatus.textContent = "Paste this into the BUILTIN_PROJECTS array.";
-exportStatus.className = "status ok";
-});
-}
-var copyBtn = document.getElementById("copyBtn");
-if (copyBtn) {
-copyBtn.addEventListener("click", function () {
-if (!exportArea.value) {
-exportStatus.textContent = "Generate an export first.";
-exportStatus.className = "status err";
-return;
-}
-exportArea.select();
-try {
-navigator.clipboard.writeText(exportArea.value).then(function () {
-exportStatus.textContent = "Copied to clipboard.";
-exportStatus.className = "status ok";
-});
-} catch (e) {
-document.execCommand("copy");
-exportStatus.textContent = "Copied.";
-exportStatus.className = "status ok";
-}
-});
-}
+if (exportBtn) { exportBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); var status = document.getElementById("exportStatus"); if (!projectsCache.length) { area.value = ""; status.textContent = "No custom projects to export."; status.className = "status err"; return; } area.value = JSON.stringify(projectsCache, null, 2); status.textContent = "Paste this into the BUILTIN_PROJECTS array."; status.className = "status ok"; }); }
+var copyBtn = document.getElementById("copyBtn"); if (copyBtn) { copyBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); if (!area.value) { document.getElementById("exportStatus").textContent = "Generate an export first."; document.getElementById("exportStatus").className = "status err"; return; } area.select(); try { navigator.clipboard.writeText(area.value).then(function () { document.getElementById("exportStatus").textContent = "Copied to clipboard."; document.getElementById("exportStatus").className = "status ok"; }); } catch (e) { document.execCommand("copy"); document.getElementById("exportStatus").textContent = "Copied."; document.getElementById("exportStatus").className = "status ok"; } }); }
 var downloadBtn = document.getElementById("downloadBtn");
-if (downloadBtn) {
-downloadBtn.addEventListener("click", function () {
-var custom = projectsCache;
-var blob = new Blob([JSON.stringify(custom, null, 2)], { type: "application/json" });
-var url = URL.createObjectURL(blob);
-var a = document.createElement("a");
-a.href = url;
-a.download = "projects.json";
-document.body.appendChild(a);
-a.click();
-a.remove();
-URL.revokeObjectURL(url);
-});
-}
-var logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-logoutBtn.addEventListener("click", function () {
-setAuthed(false);
-renderAdmin();
-});
-}
+if (downloadBtn) { downloadBtn.addEventListener("click", function () { var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" }); var url = URL.createObjectURL(blob); var a = document.createElement("a"); a.href = url; a.download = "projects.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }); }
+var logoutBtn = document.getElementById("logoutBtn"); if (logoutBtn) { logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(); }); }
 })();
 
 /* =========================================================
 INIT
 ========================================================= */
 async function init() {
-await fetchProjects();
+await fetchData();
 renderProjectLists();
+updateNavAuth();
 document.getElementById("year").textContent = new Date().getFullYear();
 updateSubCount();
-if (window.location.hash === "#admin") {
-renderAdmin();
+if (window.location.hash === "#admin") renderAdmin();
 }
-// FIX: re-run the router now that project data has loaded, so a
-// deep link like #project-math (or a refresh on a detail page)
-// renders the real project instead of "Project not found".
-window.dispatchEvent(new Event("hashchange"));
-}
-
 init();
 </script>
 </body>
