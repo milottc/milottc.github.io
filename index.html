@@ -352,19 +352,20 @@ No spam, no schedule — just when I have something worth sharing.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-<form id="newsletterForm" novalidate>
-<div class="field">
-<label for="nl-name">Your name</label>
-<input type="text" id="nl-name" name="name" placeholder="Ethan" required />
-</div>
-<div class="field">
-<label for="nl-email">Email address</label>
-<input type="email" id="nl-email" name="email" placeholder="you@example.com" required />
-<div class="hint">I'll only use this to send you the newsletter.</div>
-</div>
-<button type="submit" class="btn btn-primary">Subscribe</button>
-<p class="status" id="newsletterStatus" aria-live="polite"></p>
-</form>
+    
+    <!-- BUTTONDOWN FORM: Replace YOUR_BUTTONDOWN_USERNAME with your actual Buttondown username -->
+    <form action="https://buttondown.com/api/emails/embed-subscribe/ethan1974" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
+      <div class="field">
+        <label for="bd-email">Email address</label>
+        <input type="email" name="email" id="bd-email" placeholder="you@example.com" required />
+        <div class="hint">I'll only use this to send you the newsletter.</div>
+      </div>
+      <!-- Hidden field required by Buttondown -->
+      <input type="hidden" value="1" name="embed" />
+      <button type="submit" class="btn btn-primary">Subscribe</button>
+    </form>
+    <!-- END BUTTONDOWN FORM -->
+
 <div class="note">
 Prefer email? Just write to
 <a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
@@ -373,6 +374,7 @@ with the subject "Newsletter signup".
 <p class="sub-count" id="subCount"></p>
 </section>
 </div>
+
 <!-- ============ AUTH (LOGIN / SIGNUP) ============ -->
 <div class="view" id="view-auth" data-view="auth">
 <header class="hero wrap" style="padding-bottom:20px;">
@@ -407,6 +409,7 @@ This is a demo login system stored in the cloud. Do not use a real password.
 </div>
 </section>
 </div>
+
 <!-- ============ ADMIN ============ -->
 <div class="view" id="view-admin" data-view="admin">
 <header class="hero wrap" style="padding-bottom:40px;">
@@ -522,6 +525,7 @@ sync across devices. The password is just a soft gate.
 </div>
 </section>
 </div>
+
 <!-- ============ CONTACT ============ -->
 <div class="view" id="view-contact" data-view="contact">
 <header class="hero wrap" style="padding-bottom:40px;">
@@ -569,7 +573,7 @@ is open and I promise to be friendly.
 CONFIG
 ========================================================= */
 var ADMIN_PASSWORD = "ethan";
-var NEWSLETTER_ENDPOINT = "";
+var NEWSLETTER_ENDPOINT = ""; // Leave empty, we are using Buttondown's direct form action
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
@@ -1045,24 +1049,13 @@ show();
 })();
 
 /* =========================================================
-NEWSLETTER
+NEWSLETTER (Buttondown Handler)
 ========================================================= */
+// We removed the JavaScript form interceptor so the form submits directly to Buttondown.
 function updateSubCount() {
 var el = document.getElementById("subCount");
-if (!el) return;
-el.textContent = "Signups are stored locally in this demo.";
+if (el) el.textContent = ""; // Handled by Buttondown now
 }
-(function () {
-var form = document.getElementById("newsletterForm");
-if (!form) return;
-form.addEventListener("submit", function (e) {
-e.preventDefault();
-var status = document.getElementById("newsletterStatus");
-status.textContent = "Thanks for signing up! (Demo mode)";
-status.className = "status ok";
-form.reset();
-});
-})();
 
 /* =========================================================
 ADMIN
