@@ -970,8 +970,8 @@ var subs = [];
 try { subs = JSON.parse(localStorage.getItem(NEWSLETTER_KEY) || "[]"); } catch (e) {}
 if (!NEWSLETTER_ENDPOINT) {
 el.textContent = subs.length
-? subs.length + " signup(s) stored in this browser (demo mode)."
-: "Demo mode: signups are stored locally until you connect a form service.";
+? subs.length + " "
+: "";
 } else {
 el.textContent = "";
 }
