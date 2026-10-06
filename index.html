@@ -134,6 +134,18 @@ letter-spacing: 0.06em; background: #eef2ff; color: #4f6df5;
 padding: 2px 7px; border-radius: 3px; margin-left: 8px; vertical-align: middle;
 }
 .note { font-size: 0.82rem; color: var(--faint); border-left: 2px solid var(--border); padding-left: 14px; margin: 20px 0; }
+/* AI disclosure */
+.disclosure {
+border: 1px solid var(--border);
+border-left: 3px solid var(--fg);
+border-radius: 6px;
+padding: 22px 24px;
+margin: 28px 0 0;
+background: #fafafa;
+}
+.disclosure h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 8px; }
+.disclosure p { margin: 0 0 10px; font-size: 0.92rem; color: var(--muted); max-width: 580px; }
+.disclosure p:last-child { margin-bottom: 0; }
 /* Footer */
 footer { border-top: 1px solid var(--border); padding: 32px 0 56px; font-size: 0.83rem; color: var(--faint); }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -183,16 +195,29 @@ section { padding: 40px 0; }
 <div class="view" id="view-home" data-view="home">
 <header class="hero wrap">
 <span class="eyebrow">Developer</span>
-<h1>Hi, I'm Ethan. I build things with code.</h1>
+<h1>Hi, I'm Ethan. I build things with AI.</h1>
 <p class="lede">
 Welcome to my corner of the internet. I'm a developer who loves turning
 ideas into working software — from small utilities to bigger experiments.
-When I'm not coding, I'm probably deep in math, anesthesia, physics,
-chemistry, aviation, cheese, monkeys, or raccoons. But mostly code.
+When I'm not building, I'm probably deep in math, anesthesia, physics,
+chemistry, aviation, cheese, monkeys, or raccoons. But mostly building.
 </p>
 <div class="cta-row">
 <a class="btn btn-primary" href="#projects">See my projects</a>
 <a class="btn btn-ghost" href="#contact">Get in touch</a>
+</div>
+
+<div class="disclosure">
+<h3>Full disclosure</h3>
+<p>
+I don't write the code myself. I use AI to make apps — I describe what I
+want, the AI writes it, and I test it, break it, and explain what's wrong
+until it works the way I pictured.
+</p>
+<p>
+So think of me as the director, not the typist. The ideas, the taste, and
+the "no, that's still not right" are all mine. The syntax is the AI's.
+</p>
 </div>
 </header>
 <section class="wrap">
@@ -238,13 +263,22 @@ is open and I promise to be friendly.
 <span class="eyebrow">Work</span>
 <h1>Projects</h1>
 <p class="lede">
-A selection of coding projects I'm proud of. Some are practical, some are
+A selection of projects I'm proud of. Some are practical, some are
 experiments, and some exist because I thought "wouldn't it be cool if…"
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
 <div class="project-list" id="allProjectList"></div>
-<div class="cta-row" style="margin-top:40px;">
+<div class="disclosure" style="margin-top:36px;">
+<h3>How these get built</h3>
+<p>
+Every project here was made by me working with AI. I come up with the
+idea, describe what it should do, and then keep pushing — "no, the button
+should be there", "that breaks when I do this", "make it faster" — until
+it actually works. I don't type the code; I judge the result.
+</p>
+</div>
+<div class="cta-row" style="margin-top:32px;">
 <a class="btn btn-primary" href="#contact">Collaborate with me</a>
 <a class="btn btn-ghost" href="#admin">Add a project</a>
 </div>
@@ -275,12 +309,42 @@ something clicks. That's basically the thread connecting everything I do.
 <section class="wrap">
 <div class="section-head"><h2>How I got here</h2></div>
 <p style="color:var(--muted); max-width:620px; margin:0;">
-I started coding because I wanted to make a calculator that showed its
+I started building because I wanted to make a calculator that showed its
 work — that turned into a habit of building small tools to answer whatever
 question was stuck in my head. Somewhere along the way I fell in love with
-the process: the parsing, the debugging, the moment the thing finally runs.
+the process: the describing, the testing, the debugging, the moment the
+thing finally runs.
 </p>
 </section>
+
+<!-- ===== AI DISCLOSURE ===== -->
+<section class="wrap">
+<div class="section-head">
+<h2>About the code, honestly</h2>
+</div>
+<div class="disclosure" style="margin-top:0;">
+<h3>I use AI to make apps. I don't code.</h3>
+<p>
+That's the whole truth. I don't sit down and write JavaScript or Python
+from scratch. What I actually do is use AI to build things — I explain
+what I want, the AI produces code, and then I run it, poke at it, and
+tell it what's broken.
+</p>
+<p>
+The skill isn't typing syntax. It's knowing what you want, noticing when
+something is subtly wrong, and being stubborn enough to keep iterating
+until it's right. I'm good at that part. The semicolons are somebody
+else's job.
+</p>
+<p>
+I'd rather say this plainly than pretend otherwise. If you're hiring or
+collaborating, you should know exactly what you're getting: someone who
+can turn an idea into a working app by directing AI, testing relentlessly,
+and refusing to ship something that doesn't work.
+</p>
+</div>
+</section>
+
 <section class="wrap">
 <div class="section-head"><h2>What I'm working on now</h2></div>
 <p style="color:var(--muted); max-width:620px; margin:0 0 24px;">
@@ -306,7 +370,7 @@ about — math education, clinical support, aviation, and (yes) cheese.
 <div class="interest-item"><h3>Anesthesiology</h3><p>Keeping someone safely unconscious and pain-free — physiology, pharmacology, judgment.</p></div>
 <div class="interest-item"><h3>Science &amp; Physics</h3><p>From why the sky is blue to why a wing generates lift. Physics is math that moves.</p></div>
 <div class="interest-item"><h3>Chemistry</h3><p>Reactions, bonding, and the beautiful chaos of molecules deciding what to do next.</p></div>
-<div class="interest-item"><h3>Coding</h3><p>Turning ideas into things that actually run. A good algorithm, a well-named variable.</p></div>
+<div class="interest-item"><h3>Building things</h3><p>Turning ideas into things that actually run. A good algorithm, a well-named variable.</p></div>
 <div class="interest-item"><h3>Aviation</h3><p>Flight planning, aerodynamics, and the mild magic of a 200-ton machine leaving the ground.</p></div>
 <div class="interest-item"><h3>Cheese</h3><p>An entire scientific discipline disguised as a snack. Aged gouda is a personality trait.</p></div>
 <div class="interest-item"><h3>Monkeys</h3><p>Clever, social, and chaotic in the best way. Primatology is wildly underrated.</p></div>
@@ -352,8 +416,8 @@ No spam, no schedule — just when I have something worth sharing.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-    
-    <!-- BUTTONDOWN FORM: Replace YOUR_BUTTONDOWN_USERNAME with your actual Buttondown username -->
+
+    <!-- BUTTONDOWN FORM: Replace the username in the action URL with your own -->
     <form action="https://buttondown.com/api/emails/embed-subscribe/ethan1974" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
       <div class="field">
         <label for="bd-email">Email address</label>
@@ -554,7 +618,7 @@ is open and I promise to be friendly.
 <p>Pretty much anything, but especially these.</p>
 </div>
 <div class="interest-list">
-<div class="interest-item"><h3>Collaborations</h3><p>Building something together, reviewing code, or bouncing ideas around.</p></div>
+<div class="interest-item"><h3>Collaborations</h3><p>Building something together, reviewing ideas, or bouncing concepts around.</p></div>
 <div class="interest-item"><h3>Math &amp; Science</h3><p>Homework help, interesting problems, or just a good physics argument.</p></div>
 <div class="interest-item"><h3>Cheese &amp; Critters</h3><p>Yes, really. Send me your favourite cheese and your best raccoon sighting.</p></div>
 <div class="interest-item"><h3>Aviation &amp; Medicine</h3><p>Flight planning, aerodynamics, or anything anesthesiology-adjacent.</p></div>
@@ -564,7 +628,7 @@ is open and I promise to be friendly.
 </main>
 <footer>
 <div class="wrap">
-<div>© <span id="year"></span> Ethan</div>
+<div>© <span id="year"></span> Ethan · Built with AI</div>
 <a href="mailto:ethankwan1@outlook.com">ethankwan1@outlook.com</a>
 </div>
 </footer>
@@ -573,12 +637,11 @@ is open and I promise to be friendly.
 CONFIG
 ========================================================= */
 var ADMIN_PASSWORD = "ethan";
-var NEWSLETTER_ENDPOINT = ""; // Leave empty, we are using Buttondown's direct form action
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
-var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq"; 
-var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";  
+var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq";
+var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";
 // ================================
 
 /* =========================================================
@@ -590,7 +653,7 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
-appUrl: "", 
+appUrl: "",
 appCode: "",
 sections: [
 { h: "What it does", p: [
@@ -750,20 +813,27 @@ return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(
 
 // Simple Base64 obfuscation for demo purposes (NOT SECURE)
 function encodePass(s) { return btoa(unescape(encodeURIComponent(s))); }
-function decodePass(s) { return decodeURIComponent(escape(atob(s))); }
+function decodePass(s) {
+try { return decodeURIComponent(escape(atob(s))); } catch (e) { return ""; }
+}
 
 // FETCH FROM CLOUD
 async function fetchData() {
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+var res = await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID + "/latest", {
 headers: { "X-Master-Key": JSONBIN_API_KEY }
 });
 if (res.ok) {
-const data = await res.json();
+var data = await res.json();
 var record = data.record || {};
-projectsCache = Array.isArray(record.projects) ? record.projects : (Array.isArray(record) ? record : []);
+if (Array.isArray(record)) {
+projectsCache = record;
+usersCache = [];
+} else {
+projectsCache = Array.isArray(record.projects) ? record.projects : [];
 usersCache = Array.isArray(record.users) ? record.users : [];
+}
 return;
 }
 } catch (e) { console.error("JSONBin fetch failed.", e); }
@@ -772,23 +842,23 @@ return;
 try {
 projectsCache = JSON.parse(localStorage.getItem("ethan_projects") || "[]");
 usersCache = JSON.parse(localStorage.getItem("ethan_users") || "[]");
-} catch(e) {}
+} catch (e) { projectsCache = []; usersCache = []; }
 }
 
 // SAVE TO CLOUD
 async function saveData() {
-try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch(e) {}
-try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch(e) {}
+try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch (e) {}
+try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch (e) {}
 
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID, {
 method: "PUT",
 headers: {
 "Content-Type": "application/json",
 "X-Master-Key": JSONBIN_API_KEY
 },
-body: JSON.stringify({ projects: projectsCache, users: usersCache }) 
+body: JSON.stringify({ projects: projectsCache, users: usersCache })
 });
 } catch (e) { console.error("JSONBin save failed.", e); }
 }
@@ -812,13 +882,13 @@ return result;
 }
 
 /* =========================================================
-AUTH SYSTEM (Using localStorage for persistent login)
+AUTH SYSTEM (localStorage session)
 ========================================================= */
 function isUserLoggedIn() {
-try { return localStorage.getItem(USER_KEY) !== null; } catch(e) { return false; }
+try { return localStorage.getItem(USER_KEY) !== null; } catch (e) { return false; }
 }
 function getLoggedInUser() {
-try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch(e) { return null; }
+try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch (e) { return null; }
 }
 function updateNavAuth() {
 var container = document.getElementById("nav-auth-container");
@@ -826,16 +896,21 @@ if (!container) return;
 
 if (isUserLoggedIn()) {
 var u = getLoggedInUser();
-container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u.username) + ' (Logout)</a>';
-document.getElementById("nav-logout").addEventListener("click", function(e) {
+container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u && u.username ? u.username : "Account") + ' (Logout)</a>';
+var lo = document.getElementById("nav-logout");
+if (lo) {
+lo.addEventListener("click", function (e) {
 e.preventDefault();
 localStorage.removeItem(USER_KEY);
 updateNavAuth();
 window.location.hash = "#home";
 });
+}
 } else {
 container.innerHTML = '<a href="#auth" data-nav="auth" id="nav-login">Login</a>';
 }
+// Re-apply active state to the freshly created link
+if (typeof window.__applyNavActive === "function") window.__applyNavActive();
 }
 
 // Login/Signup Form Handler
@@ -858,7 +933,7 @@ subtitle.textContent = "Join to access member features.";
 submitBtn.textContent = "Sign Up";
 toggleBtn.textContent = "Already have an account? Log in";
 confirmField.style.display = "block";
-form.elements.password.autocomplete = "new-password";
+form.elements.password.setAttribute("autocomplete", "new-password");
 form.elements.confirmPassword.required = true;
 } else {
 title.textContent = "Welcome back.";
@@ -866,7 +941,7 @@ subtitle.textContent = "Log in to your account.";
 submitBtn.textContent = "Log In";
 toggleBtn.textContent = "Don't have an account? Sign up";
 confirmField.style.display = "none";
-form.elements.password.autocomplete = "current-password";
+form.elements.password.setAttribute("autocomplete", "current-password");
 form.elements.confirmPassword.required = false;
 }
 status.textContent = "";
@@ -893,8 +968,12 @@ if (isSignupMode && password !== confirmPassword) {
 status.textContent = "Passwords do not match.";
 status.className = "status err"; return;
 }
+if (isSignupMode && password.length < 4) {
+status.textContent = "Password must be at least 4 characters.";
+status.className = "status err"; return;
+}
 
-status.textContent = "Processing...";
+status.textContent = "Processing…";
 status.className = "status";
 
 // Fetch latest users from cloud
@@ -902,7 +981,10 @@ await fetchData();
 
 if (isSignupMode) {
 // SIGNUP
-if (usersCache.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+var taken = usersCache.some(function (u) {
+return String(u.username || "").toLowerCase() === username.toLowerCase();
+});
+if (taken) {
 status.textContent = "Username already taken.";
 status.className = "status err"; return;
 }
@@ -910,18 +992,20 @@ usersCache.push({ username: username, password: encodePass(password) });
 await saveData();
 localStorage.setItem(USER_KEY, JSON.stringify({ username: username }));
 updateNavAuth();
-status.textContent = "Account created! Logging you in...";
+status.textContent = "Account created! Logging you in…";
 status.className = "status ok";
-setTimeout(() => { window.location.hash = "#home"; }, 1000);
+setTimeout(function () { window.location.hash = "#home"; }, 900);
 } else {
 // LOGIN
-var user = usersCache.find(u => u.username.toLowerCase() === username.toLowerCase() && decodePass(u.password) === password);
+var user = usersCache.filter(function (u) {
+return String(u.username || "").toLowerCase() === username.toLowerCase() && decodePass(u.password) === password;
+})[0];
 if (user) {
 localStorage.setItem(USER_KEY, JSON.stringify({ username: user.username }));
 updateNavAuth();
 status.textContent = "Logged in successfully!";
 status.className = "status ok";
-setTimeout(() => { window.location.hash = "#home"; }, 1000);
+setTimeout(function () { window.location.hash = "#home"; }, 900);
 } else {
 status.textContent = "Invalid username or password.";
 status.className = "status err";
@@ -978,9 +1062,9 @@ html += '<span>Live App Preview</span>';
 if (p.appUrl) {
 var url = p.appUrl;
 if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-html += '<a href="' + esc(url) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
+html += '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
 }
-html += '</div><iframe id="liveAppFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
+html += '</div><iframe id="liveAppFrame" title="Live app preview" style="width:100%; height:600px; border:none; display:block; background:#fff;" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe></div>';
 }
 
 (p.sections || []).forEach(function (s) {
@@ -993,40 +1077,63 @@ host.innerHTML = html;
 
 var frame = document.getElementById("liveAppFrame");
 if (frame) {
-if (p.appCode) { var blob = new Blob([p.appCode], { type: "text/html" }); frame.src = URL.createObjectURL(blob); }
-else if (p.appUrl) { var url = p.appUrl; if (!/^https?:\/\//i.test(url)) url = "https://" + url; frame.src = url; }
+if (p.appCode) {
+var blob = new Blob([p.appCode], { type: "text/html" });
+frame.src = URL.createObjectURL(blob);
+} else if (p.appUrl) {
+var u2 = p.appUrl;
+if (!/^https?:\/\//i.test(u2)) u2 = "https://" + u2;
+frame.src = u2;
+}
 }
 }
 
 /* =========================================================
 ROUTER
 ========================================================= */
+var routerRender = null;
 (function () {
 var views = document.querySelectorAll(".view");
-var navLinks = document.querySelectorAll("[data-nav]");
+
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-if (hash === "project-detail") return "home";
+// Project detail routes: #project-<slug>
+if (hash.indexOf("project-") === 0) return hash;
 if (document.getElementById("view-" + hash)) return hash;
 return "home";
 }
+
+function applyNavActive(navKey) {
+document.querySelectorAll("[data-nav]").forEach(function (l) {
+l.classList.toggle("active", l.getAttribute("data-nav") === navKey);
+});
+}
+window.__applyNavActive = function () { applyNavActive(window.__currentNavKey || "home"); };
+
 function render() {
 var route = getRoute();
 var isDetail = route.indexOf("project-") === 0;
 var slug = isDetail ? route.slice("project-".length) : null;
+
 views.forEach(function (v) {
 if (v.dataset.view === "project-detail") v.classList.toggle("active", isDetail);
 else v.classList.toggle("active", v.dataset.view === route);
 });
+
 if (isDetail) renderProjectDetail(slug);
+
 var navKey = isDetail ? "projects" : route;
-navLinks.forEach(function (l) { l.classList.toggle("active", l.dataset.nav === navKey); });
+window.__currentNavKey = navKey;
+applyNavActive(navKey);
+
 if (route === "admin") renderAdmin();
 if (route === "newsletter") updateSubCount();
+
 window.scrollTo({ top: 0, behavior: "auto" });
 }
+
 window.addEventListener("hashchange", render);
-window.addEventListener("load", render);
+routerRender = render;
 render();
 })();
 
@@ -1040,8 +1147,10 @@ var factBtn = document.getElementById("factBtn");
 var last = -1;
 function show() {
 if (!factText) return;
-var i; do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
-last = i; factText.style.opacity = "0";
+var i;
+do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
+last = i;
+factText.style.opacity = "0";
 setTimeout(function () { factText.textContent = facts[i]; factText.style.opacity = "1"; }, 150);
 }
 if (factBtn) factBtn.addEventListener("click", show);
@@ -1049,12 +1158,11 @@ show();
 })();
 
 /* =========================================================
-NEWSLETTER (Buttondown Handler)
+NEWSLETTER (Buttondown handles submission directly)
 ========================================================= */
-// We removed the JavaScript form interceptor so the form submits directly to Buttondown.
 function updateSubCount() {
 var el = document.getElementById("subCount");
-if (el) el.textContent = ""; // Handled by Buttondown now
+if (el) el.textContent = "";
 }
 
 /* =========================================================
@@ -1062,6 +1170,7 @@ ADMIN
 ========================================================= */
 function isAuthed() { try { return sessionStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { return false; } }
 function setAuthed(v) { try { if (v) sessionStorage.setItem(ADMIN_KEY, "1"); else sessionStorage.removeItem(ADMIN_KEY); } catch (e) {} }
+
 function renderAdmin() {
 var gate = document.getElementById("adminGate");
 var panel = document.getElementById("adminPanel");
@@ -1069,60 +1178,201 @@ if (!gate || !panel) return;
 if (isAuthed()) { gate.style.display = "none"; panel.style.display = "block"; renderAdminList(); }
 else { gate.style.display = "block"; panel.style.display = "none"; }
 }
+
 function renderAdminList() {
 var host = document.getElementById("adminList");
 if (!host) return;
-if (!projectsCache.length) { host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>'; return; }
+if (!projectsCache.length) {
+host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>';
+return;
+}
 host.innerHTML = projectsCache.map(function (p) {
 return '<div class="admin-item"><div><h4>' + esc(p.title) + '</h4><div class="meta">#' + esc(p.slug) + ' · ' + (p.tags || []).length + ' tag(s)</div></div><div class="admin-actions"><button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(p.slug) + '">Edit</button><button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(p.slug) + '">Delete</button></div></div>';
 }).join("");
-host.querySelectorAll("[data-edit]").forEach(function (btn) { btn.addEventListener("click", function () { loadIntoForm(btn.dataset.edit); }); });
+
+host.querySelectorAll("[data-edit]").forEach(function (btn) {
+btn.addEventListener("click", function () { loadIntoForm(btn.getAttribute("data-edit")); });
+});
 host.querySelectorAll("[data-delete]").forEach(function (btn) {
 btn.addEventListener("click", async function () {
 if (!confirm("Delete this project?")) return;
-projectsCache = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
-await saveData(); renderAdminList(); renderProjectLists();
+var slug = btn.getAttribute("data-delete");
+projectsCache = projectsCache.filter(function (p) { return p.slug !== slug; });
+await saveData();
+renderAdminList();
+renderProjectLists();
 });
 });
 }
+
 function loadIntoForm(slug) {
 var p = projectsCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
 var f = document.getElementById("projectForm");
-f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.blurb.value = p.blurb || ""; f.elements.tags.value = (p.tags || []).join(", "); f.elements.appUrl.value = p.appUrl || ""; f.elements.appCode.value = p.appCode || "";
+if (!f) return;
+f.elements.title.value = p.title || "";
+f.elements.slug.value = p.slug || "";
+f.elements.blurb.value = p.blurb || "";
+f.elements.tags.value = (p.tags || []).join(", ");
+f.elements.appUrl.value = p.appUrl || "";
+f.elements.appCode.value = p.appCode || "";
 var does = "", how = [], learned = [];
-(p.sections || []).forEach(function (s) { if (s.h === "What it does") does = (s.p || []).join("\n"); if (s.h === "How it works") how = s.ul || []; if (s.h === "What I learned") learned = s.ul || []; });
-f.elements.does.value = does; f.elements.how.value = how.join("\n"); f.elements.learned.value = learned.join("\n");
-document.getElementById("formTitle").textContent = "Edit project"; document.getElementById("saveBtn").textContent = "Update project";
+(p.sections || []).forEach(function (s) {
+if (s.h === "What it does") does = (s.p || []).join("\n");
+if (s.h === "How it works") how = s.ul || [];
+if (s.h === "What I learned") learned = s.ul || [];
+});
+f.elements.does.value = does;
+f.elements.how.value = how.join("\n");
+f.elements.learned.value = learned.join("\n");
+document.getElementById("formTitle").textContent = "Edit project";
+document.getElementById("saveBtn").textContent = "Update project";
 window.scrollTo({ top: 200, behavior: "smooth" });
 }
-function clearForm() { var f = document.getElementById("projectForm"); f.reset(); document.getElementById("formTitle").textContent = "Add a project"; document.getElementById("saveBtn").textContent = "Save project"; document.getElementById("formStatus").textContent = ""; }
+
+function clearForm() {
+var f = document.getElementById("projectForm");
+if (!f) return;
+f.reset();
+document.getElementById("formTitle").textContent = "Add a project";
+document.getElementById("saveBtn").textContent = "Save project";
+document.getElementById("formStatus").textContent = "";
+document.getElementById("formStatus").className = "status";
+}
+
 (function () {
 var gateForm = document.getElementById("gateForm");
-if (gateForm) { gateForm.addEventListener("submit", function (e) { e.preventDefault(); if (gateForm.elements.pw.value === ADMIN_PASSWORD) { setAuthed(true); gateForm.reset(); renderAdmin(); } else { document.getElementById("gateStatus").textContent = "Wrong password."; document.getElementById("gateStatus").className = "status err"; } }); }
+if (gateForm) {
+gateForm.addEventListener("submit", function (e) {
+e.preventDefault();
+var st = document.getElementById("gateStatus");
+if (gateForm.elements.pw.value === ADMIN_PASSWORD) {
+setAuthed(true);
+gateForm.reset();
+st.textContent = "";
+renderAdmin();
+} else {
+st.textContent = "Wrong password.";
+st.className = "status err";
+}
+});
+}
+
 var projectForm = document.getElementById("projectForm");
 if (projectForm) {
 projectForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
-var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
-var blurb = (f.elements.blurb.value || "").trim(); var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-var appUrl = (f.elements.appUrl.value || "").trim(); var appCode = (f.elements.appCode.value || "").trim();
-var does = (f.elements.does.value || "").trim(); var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean); var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-if (!title) { document.getElementById("formStatus").textContent = "Title is required."; document.getElementById("formStatus").className = "status err"; return; }
-var sections = []; if (does) sections.push({ h: "What it does", p: [does] }); if (how.length) sections.push({ h: "How it works", ul: how }); if (learned.length) sections.push({ h: "What I learned", ul: learned });
+var st = document.getElementById("formStatus");
+
+var title = (f.elements.title.value || "").trim();
+var slug = slugify((f.elements.slug.value || "").trim() || title);
+var blurb = (f.elements.blurb.value || "").trim();
+var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+var appUrl = (f.elements.appUrl.value || "").trim();
+var appCode = (f.elements.appCode.value || "").trim();
+var does = (f.elements.does.value || "").trim();
+var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+
+if (!title) {
+st.textContent = "Title is required.";
+st.className = "status err";
+return;
+}
+
+var sections = [];
+if (does) sections.push({ h: "What it does", p: [does] });
+if (how.length) sections.push({ h: "How it works", ul: how });
+if (learned.length) sections.push({ h: "What I learned", ul: learned });
+
 var project = { slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections };
-var idx = -1; projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
-await saveData(); clearForm(); renderAdminList(); renderProjectLists(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
+
+var idx = -1;
+projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; });
+if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
+
+await saveData();
+clearForm();
+renderAdminList();
+renderProjectLists();
+
+st.textContent = "Saved to cloud: " + title;
+st.className = "status ok";
+setTimeout(function () { st.textContent = ""; }, 2500);
 });
 }
-var resetBtn = document.getElementById("resetBtn"); if (resetBtn) resetBtn.addEventListener("click", clearForm);
+
+var resetBtn = document.getElementById("resetBtn");
+if (resetBtn) resetBtn.addEventListener("click", clearForm);
+
 var exportBtn = document.getElementById("exportBtn");
-if (exportBtn) { exportBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); var status = document.getElementById("exportStatus"); if (!projectsCache.length) { area.value = ""; status.textContent = "No custom projects to export."; status.className = "status err"; return; } area.value = JSON.stringify(projectsCache, null, 2); status.textContent = "Paste this into the BUILTIN_PROJECTS array."; status.className = "status ok"; }); }
-var copyBtn = document.getElementById("copyBtn"); if (copyBtn) { copyBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); if (!area.value) { document.getElementById("exportStatus").textContent = "Generate an export first."; document.getElementById("exportStatus").className = "status err"; return; } area.select(); try { navigator.clipboard.writeText(area.value).then(function () { document.getElementById("exportStatus").textContent = "Copied to clipboard."; document.getElementById("exportStatus").className = "status ok"; }); } catch (e) { document.execCommand("copy"); document.getElementById("exportStatus").textContent = "Copied."; document.getElementById("exportStatus").className = "status ok"; } }); }
+if (exportBtn) {
+exportBtn.addEventListener("click", function () {
+var area = document.getElementById("exportArea");
+var status = document.getElementById("exportStatus");
+if (!projectsCache.length) {
+area.value = "";
+status.textContent = "No custom projects to export.";
+status.className = "status err";
+return;
+}
+area.value = JSON.stringify(projectsCache, null, 2);
+status.textContent = "Paste this into the BUILTIN_PROJECTS array.";
+status.className = "status ok";
+});
+}
+
+var copyBtn = document.getElementById("copyBtn");
+if (copyBtn) {
+copyBtn.addEventListener("click", function () {
+var area = document.getElementById("exportArea");
+var status = document.getElementById("exportStatus");
+if (!area.value) {
+status.textContent = "Generate an export first.";
+status.className = "status err";
+return;
+}
+area.select();
+try {
+navigator.clipboard.writeText(area.value).then(function () {
+status.textContent = "Copied to clipboard.";
+status.className = "status ok";
+}).catch(function () {
+document.execCommand("copy");
+status.textContent = "Copied.";
+status.className = "status ok";
+});
+} catch (e) {
+document.execCommand("copy");
+status.textContent = "Copied.";
+status.className = "status ok";
+}
+});
+}
+
 var downloadBtn = document.getElementById("downloadBtn");
-if (downloadBtn) { downloadBtn.addEventListener("click", function () { var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" }); var url = URL.createObjectURL(blob); var a = document.createElement("a"); a.href = url; a.download = "projects.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }); }
-var logoutBtn = document.getElementById("logoutBtn"); if (logoutBtn) { logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(); }); }
+if (downloadBtn) {
+downloadBtn.addEventListener("click", function () {
+var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" });
+var url = URL.createObjectURL(blob);
+var a = document.createElement("a");
+a.href = url;
+a.download = "projects.json";
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+});
+}
+
+var logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+logoutBtn.addEventListener("click", function () {
+setAuthed(false);
+renderAdmin();
+});
+}
 })();
 
 /* =========================================================
@@ -1132,9 +1382,10 @@ async function init() {
 await fetchData();
 renderProjectLists();
 updateNavAuth();
-document.getElementById("year").textContent = new Date().getFullYear();
+var y = document.getElementById("year");
+if (y) y.textContent = new Date().getFullYear();
 updateSubCount();
-if (window.location.hash === "#admin") renderAdmin();
+if (typeof routerRender === "function") routerRender();
 }
 init();
 </script>
