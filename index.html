@@ -653,12 +653,12 @@ is open and I promise to be friendly.
 CONFIG
 ========================================================= */
 var ADMIN_PASSWORD = "ethan";
-var NEWSLETTER_ENDPOINT = ""; 
+var NEWSLETTER_ENDPOINT = "";
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
-var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq"; 
-var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";  
+var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq";
+var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";
 // ================================
 
 /* =========================================================
@@ -670,7 +670,7 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
-appUrl: "", 
+appUrl: "",
 appCode: "",
 sections: [
 { h: "What it does", p: [
@@ -830,8 +830,8 @@ return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(
 }
 
 // Simple Base64 obfuscation for demo purposes (NOT SECURE)
-function encodePass(s) { return btoa(unescape(encodeURIComponent(s))); }
-function decodePass(s) { return decodeURIComponent(escape(atob(s))); }
+function encodePass(s) { try { return btoa(unescape(encodeURIComponent(s))); } catch (e) { return ""; } }
+function decodePass(s) { try { return decodeURIComponent(escape(atob(s))); } catch (e) { return ""; } }
 
 // FETCH FROM CLOUD
 async function fetchData() {
@@ -872,7 +872,7 @@ headers: {
 "Content-Type": "application/json",
 "X-Master-Key": JSONBIN_API_KEY
 },
-body: JSON.stringify({ projects: projectsCache, users: usersCache, mustsee: mustseeCache }) 
+body: JSON.stringify({ projects: projectsCache, users: usersCache, mustsee: mustseeCache })
 });
 } catch (e) { console.error("JSONBin save failed.", e); }
 }
@@ -1158,16 +1158,20 @@ else if (p.appUrl) { var url = p.appUrl; if (!/^https?:\/\//i.test(url)) url = "
 /* =========================================================
 ROUTER
 ========================================================= */
-(function () {
+var renderRoute = (function () {
 var views = document.querySelectorAll(".view");
-var navLinks = document.querySelectorAll("[data-nav]");
+
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
 if (hash === "project-detail") return "home";
 if (hash === "mustsee-detail") return "mustsee";
+// Detail routes: #project-<slug> and #mustsee-<slug>
+if (hash.indexOf("project-") === 0) return hash;
+if (hash.indexOf("mustsee-") === 0) return hash;
 if (document.getElementById("view-" + hash)) return hash;
 return "home";
 }
+
 function render() {
 var route = getRoute();
 var isDetail = route.indexOf("project-") === 0;
@@ -1185,14 +1189,18 @@ if (isDetail) renderProjectDetail(slug);
 if (isMustSeeDetail) renderMustSeeDetail(slug);
 
 var navKey = isDetail ? "projects" : (isMustSeeDetail ? "mustsee" : route);
-navLinks.forEach(function (l) { l.classList.toggle("active", l.dataset.nav === navKey); });
+document.querySelectorAll("[data-nav]").forEach(function (l) {
+l.classList.toggle("active", l.dataset.nav === navKey);
+});
 if (route === "admin") renderAdmin();
 if (route === "newsletter") updateSubCount();
 window.scrollTo({ top: 0, behavior: "auto" });
 }
+
 window.addEventListener("hashchange", render);
 window.addEventListener("load", render);
 render();
+return render;
 })();
 
 /* =========================================================
@@ -1245,7 +1253,7 @@ host.querySelectorAll("[data-delete]").forEach(function (btn) {
 btn.addEventListener("click", async function () {
 if (!confirm("Delete this project?")) return;
 projectsCache = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
-await saveData(); renderAdminList(); renderProjectLists();
+await saveData(); renderAdminList(); renderProjectLists(); renderRoute();
 });
 });
 }
@@ -1261,7 +1269,7 @@ host.querySelectorAll("[data-delete]").forEach(function (btn) {
 btn.addEventListener("click", async function () {
 if (!confirm("Delete this Must See item?")) return;
 mustseeCache = mustseeCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
-await saveData(); renderMustSeeAdminList(); renderMustSeeList();
+await saveData(); renderMustSeeAdminList(); renderMustSeeList(); renderRoute();
 });
 });
 }
@@ -1305,7 +1313,7 @@ if (!title) { document.getElementById("formStatus").textContent = "Title is requ
 var sections = []; if (does) sections.push({ h: "What it does", p: [does] }); if (how.length) sections.push({ h: "How it works", ul: how }); if (learned.length) sections.push({ h: "What I learned", ul: learned });
 var project = { slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections };
 var idx = -1; projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
-await saveData(); clearForm(); renderAdminList(); renderProjectLists(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
+await saveData(); clearForm(); renderAdminList(); renderProjectLists(); renderRoute(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
 });
 }
 
@@ -1321,7 +1329,7 @@ var link = (f.elements.link.value || "").trim(); var content = (f.elements.conte
 if (!title) { document.getElementById("msFormStatus").textContent = "Title is required."; document.getElementById("msFormStatus").className = "status err"; return; }
 var item = { slug: slug, title: title, type: type, blurb: blurb, link: link, content: content };
 var idx = -1; mustseeCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) mustseeCache[idx] = item; else mustseeCache.push(item);
-await saveData(); clearMustSeeForm(); renderMustSeeAdminList(); renderMustSeeList(); document.getElementById("msFormStatus").textContent = "Saved to cloud: " + title; document.getElementById("msFormStatus").className = "status ok"; setTimeout(function () { document.getElementById("msFormStatus").textContent = ""; }, 2500);
+await saveData(); clearMustSeeForm(); renderMustSeeAdminList(); renderMustSeeList(); renderRoute(); document.getElementById("msFormStatus").textContent = "Saved to cloud: " + title; document.getElementById("msFormStatus").className = "status ok"; setTimeout(function () { document.getElementById("msFormStatus").textContent = ""; }, 2500);
 });
 }
 
@@ -1346,6 +1354,8 @@ renderMustSeeList();
 updateNavAuth();
 document.getElementById("year").textContent = new Date().getFullYear();
 updateSubCount();
+// Re-render now that data is loaded (fixes deep links to detail pages)
+renderRoute();
 if (window.location.hash === "#admin") renderAdmin();
 }
 init();
