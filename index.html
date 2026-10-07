@@ -69,6 +69,14 @@ text-decoration: none; color: inherit; transition: padding 0.15s ease;
 .project-row p { margin: 0 0 8px; color: var(--muted); font-size: 0.93rem; }
 .project-meta { font-size: 0.8rem; color: var(--faint); }
 .project-meta span + span::before { content: " · "; margin: 0 4px; }
+/* Must See Grid */
+.mustsee-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.mustsee-card { border: 1px solid var(--border); border-radius: 8px; padding: 24px; text-decoration: none; color: inherit; transition: box-shadow 0.2s ease, transform 0.2s ease; display: flex; flex-direction: column; }
+.mustsee-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+.mustsee-card .type-badge { display: inline-block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: #eef2ff; color: #4f6df5; padding: 2px 7px; border-radius: 3px; margin-bottom: 12px; align-self: flex-start; }
+.mustsee-card h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.mustsee-card p { color: var(--muted); font-size: 0.9rem; margin: 0 0 16px; flex-grow: 1; }
+.mustsee-card .read-more { font-size: 0.85rem; color: var(--fg); font-weight: 500; }
 /* Interest list */
 .interest-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; border-top: 1px solid var(--border); }
 .interest-item { padding: 20px 0; border-bottom: 1px solid var(--border); }
@@ -83,7 +91,7 @@ text-decoration: none; color: inherit; transition: padding 0.15s ease;
 .contact-block { border-top: 1px solid var(--border); padding-top: 36px; max-width: 580px; }
 .contact-block p { color: var(--muted); margin: 0 0 22px; }
 .contact-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
-/* Project detail */
+/* Project / MustSee detail */
 .project-hero { padding: 72px 0 32px; }
 .back { display: inline-block; font-size: 0.85rem; color: var(--muted); text-decoration: none; margin-bottom: 28px; }
 .back:hover { color: var(--fg); }
@@ -134,18 +142,6 @@ letter-spacing: 0.06em; background: #eef2ff; color: #4f6df5;
 padding: 2px 7px; border-radius: 3px; margin-left: 8px; vertical-align: middle;
 }
 .note { font-size: 0.82rem; color: var(--faint); border-left: 2px solid var(--border); padding-left: 14px; margin: 20px 0; }
-/* AI disclosure */
-.disclosure {
-border: 1px solid var(--border);
-border-left: 3px solid var(--fg);
-border-radius: 6px;
-padding: 22px 24px;
-margin: 28px 0 0;
-background: #fafafa;
-}
-.disclosure h3 { font-size: 0.95rem; font-weight: 600; margin: 0 0 8px; }
-.disclosure p { margin: 0 0 10px; font-size: 0.92rem; color: var(--muted); max-width: 580px; }
-.disclosure p:last-child { margin-bottom: 0; }
 /* Footer */
 footer { border-top: 1px solid var(--border); padding: 32px 0 56px; font-size: 0.83rem; color: var(--faint); }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
@@ -169,6 +165,7 @@ section { padding: 40px 0; }
 .interest-item:nth-child(odd) { padding-right: 0; }
 .project-row { grid-template-columns: 28px 1fr; gap: 14px; }
 .admin-item { flex-direction: column; align-items: flex-start; }
+.mustsee-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -179,6 +176,7 @@ section { padding: 40px 0; }
 <ul class="nav-links">
 <li><a href="#home" data-nav="home">Home</a></li>
 <li><a href="#projects" data-nav="projects">Projects</a></li>
+<li><a href="#mustsee" data-nav="mustsee">Must See</a></li>
 <li><a href="#about" data-nav="about">About</a></li>
 <li><a href="#interests" data-nav="interests">Interests</a></li>
 <li><a href="#fun" data-nav="fun">Fun</a></li>
@@ -195,31 +193,16 @@ section { padding: 40px 0; }
 <div class="view" id="view-home" data-view="home">
 <header class="hero wrap">
 <span class="eyebrow">Developer</span>
-<h1>Hi, I'm Ethan. I build things with AI.</h1>
+<h1>Hi, I'm Ethan. I build things with code.</h1>
 <p class="lede">
 Welcome to my corner of the internet. I'm a developer who loves turning
 ideas into working software — from small utilities to bigger experiments.
-When I'm not building, I'm probably deep in math, anesthesia, physics,
-chemistry, aviation, cheese, monkeys, or raccoons. But mostly building.
+When I'm not coding, I'm probably deep in math, anesthesia, physics,
+chemistry, aviation, cheese, monkeys, or raccoons. But mostly code.
 </p>
 <div class="cta-row">
 <a class="btn btn-primary" href="#projects">See my projects</a>
-<a class="btn btn-ghost" href="#contact">Get in touch</a>
-</div>
-
-<div class="disclosure">
-<h3>Full disclosure</h3>
-<p>
-I mostly use AI to make apps. I describe what I want, the AI writes most
-of the code, and I test it, break it, and explain what's wrong until it
-works the way I pictured. But I do sometimes write code myself — I'm not
-completely helpless with a text editor.
-</p>
-<p>
-So think of me as the director who occasionally steps in to act. The ideas,
-the taste, and the "no, that's still not right" are all mine. The syntax is
-mostly the AI's, but I can write it when I need to.
-</p>
+<a class="btn btn-ghost" href="#mustsee">Must See</a>
 </div>
 </header>
 <section class="wrap">
@@ -265,27 +248,37 @@ is open and I promise to be friendly.
 <span class="eyebrow">Work</span>
 <h1>Projects</h1>
 <p class="lede">
-A selection of projects I'm proud of. Some are practical, some are
+A selection of coding projects I'm proud of. Some are practical, some are
 experiments, and some exist because I thought "wouldn't it be cool if…"
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
 <div class="project-list" id="allProjectList"></div>
-<div class="disclosure" style="margin-top:36px;">
-<h3>How these get built</h3>
-<p>
-Most of these projects are made by me working with AI. I come up with the
-idea, describe what it should do, and then keep pushing — "no, the button
-should be there", "that breaks when I do this", "make it faster" — until
-it actually works. I do sometimes write code myself, but AI does most of
-the typing.
-</p>
-</div>
-<div class="cta-row" style="margin-top:32px;">
+<div class="cta-row" style="margin-top:40px;">
 <a class="btn btn-primary" href="#contact">Collaborate with me</a>
 <a class="btn btn-ghost" href="#admin">Add a project</a>
 </div>
 </section>
+</div>
+<!-- ============ MUST SEE ============ -->
+<div class="view" id="view-mustsee" data-view="mustsee">
+<header class="hero wrap" style="padding-bottom:40px;">
+<span class="eyebrow">Must See</span>
+<h1>The best things I've made.</h1>
+<p class="lede">
+A curated collection of my favorite projects, games, articles, and PDFs. This is the stuff I'm most proud of.
+</p>
+</header>
+<section class="wrap" style="border-top:none; padding-top:0;">
+<div class="mustsee-grid" id="mustseeList"></div>
+<div class="cta-row" style="margin-top:40px;">
+<a class="btn btn-ghost" href="#admin">Manage Must See Items</a>
+</div>
+</section>
+</div>
+<!-- ============ MUST SEE DETAIL (dynamic) ============ -->
+<div class="view" id="view-mustsee-detail" data-view="mustsee-detail">
+<div id="mustseeDetailHost"></div>
 </div>
 <!-- ============ PROJECT DETAIL (dynamic) ============ -->
 <div class="view" id="view-project-detail" data-view="project-detail">
@@ -312,43 +305,12 @@ something clicks. That's basically the thread connecting everything I do.
 <section class="wrap">
 <div class="section-head"><h2>How I got here</h2></div>
 <p style="color:var(--muted); max-width:620px; margin:0;">
-I started building because I wanted to make a calculator that showed its
+I started coding because I wanted to make a calculator that showed its
 work — that turned into a habit of building small tools to answer whatever
 question was stuck in my head. Somewhere along the way I fell in love with
-the process: the describing, the testing, the debugging, the moment the
-thing finally runs.
+the process: the parsing, the debugging, the moment the thing finally runs.
 </p>
 </section>
-
-<!-- ===== AI DISCLOSURE ===== -->
-<section class="wrap">
-<div class="section-head">
-<h2>About the code, honestly</h2>
-</div>
-<div class="disclosure" style="margin-top:0;">
-<h3>I mostly use AI to make apps. I do sometimes write code.</h3>
-<p>
-That's the truth. I don't write every line of JavaScript or Python from
-scratch. What I actually do is use AI to build things — I explain what I
-want, the AI produces code, and then I run it, poke at it, and tell it
-what's broken. Sometimes I'll write a piece myself, but AI is my main tool.
-</p>
-<p>
-The skill isn't typing syntax. It's knowing what you want, noticing when
-something is subtly wrong, and being stubborn enough to keep iterating
-until it's right. I'm good at that part. The semicolons are mostly
-somebody else's job, but I can write them when I need to.
-</p>
-<p>
-I'd rather say this plainly than pretend otherwise. If you're hiring or
-collaborating, you should know exactly what you're getting: someone who
-can turn an idea into a working app by directing AI, testing relentlessly,
-and refusing to ship something that doesn't work — and who can jump in and
-write code when the situation calls for it.
-</p>
-</div>
-</section>
-
 <section class="wrap">
 <div class="section-head"><h2>What I'm working on now</h2></div>
 <p style="color:var(--muted); max-width:620px; margin:0 0 24px;">
@@ -374,7 +336,7 @@ about — math education, clinical support, aviation, and (yes) cheese.
 <div class="interest-item"><h3>Anesthesiology</h3><p>Keeping someone safely unconscious and pain-free — physiology, pharmacology, judgment.</p></div>
 <div class="interest-item"><h3>Science &amp; Physics</h3><p>From why the sky is blue to why a wing generates lift. Physics is math that moves.</p></div>
 <div class="interest-item"><h3>Chemistry</h3><p>Reactions, bonding, and the beautiful chaos of molecules deciding what to do next.</p></div>
-<div class="interest-item"><h3>Building things</h3><p>Turning ideas into things that actually run. A good algorithm, a well-named variable.</p></div>
+<div class="interest-item"><h3>Coding</h3><p>Turning ideas into things that actually run. A good algorithm, a well-named variable.</p></div>
 <div class="interest-item"><h3>Aviation</h3><p>Flight planning, aerodynamics, and the mild magic of a 200-ton machine leaving the ground.</p></div>
 <div class="interest-item"><h3>Cheese</h3><p>An entire scientific discipline disguised as a snack. Aged gouda is a personality trait.</p></div>
 <div class="interest-item"><h3>Monkeys</h3><p>Clever, social, and chaotic in the best way. Primatology is wildly underrated.</p></div>
@@ -420,9 +382,8 @@ No spam, no schedule — just when I have something worth sharing.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-
     <!-- BUTTONDOWN FORM -->
-    <form action="https://buttondown.com/api/emails/embed-subscribe/ethan1974" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
+    <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
       <div class="field">
         <label for="bd-email">Email address</label>
         <input type="email" name="email" id="bd-email" placeholder="you@example.com" required />
@@ -432,7 +393,6 @@ No spam, no schedule — just when I have something worth sharing.
       <button type="submit" class="btn btn-primary">Subscribe</button>
     </form>
     <!-- END BUTTONDOWN FORM -->
-
 <div class="note">
 Prefer email? Just write to
 <a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
@@ -441,7 +401,6 @@ with the subject "Newsletter signup".
 <p class="sub-count" id="subCount"></p>
 </section>
 </div>
-
 <!-- ============ AUTH (LOGIN / SIGNUP) ============ -->
 <div class="view" id="view-auth" data-view="auth">
 <header class="hero wrap" style="padding-bottom:20px;">
@@ -476,14 +435,13 @@ This is a demo login system stored in the cloud. Do not use a real password.
 </div>
 </section>
 </div>
-
 <!-- ============ ADMIN ============ -->
 <div class="view" id="view-admin" data-view="admin">
 <header class="hero wrap" style="padding-bottom:40px;">
 <span class="eyebrow">Admin</span>
-<h1>Manage your projects.</h1>
+<h1>Manage your content.</h1>
 <p class="lede">
-Add, edit, and delete projects. Your changes save to the cloud and will
+Add, edit, and delete projects and Must See items. Your changes save to the cloud and will
 appear on any device you visit this site from.
 </p>
 </header>
@@ -505,7 +463,7 @@ appear on any device you visit this site from.
 </div>
 <!-- Admin panel -->
 <div id="adminPanel" style="display:none;">
-<!-- Add / edit -->
+<!-- Add / edit Project -->
 <div class="admin-panel">
 <h3 id="formTitle">Add a project</h3>
 <p class="sub">Fill in the fields. Only the title is required.</p>
@@ -559,12 +517,68 @@ appear on any device you visit this site from.
 <p class="status" id="formStatus" aria-live="polite"></p>
 </form>
 </div>
-<!-- List custom -->
+<!-- List custom Projects -->
 <div class="admin-panel">
 <h3>Your custom projects</h3>
 <p class="sub">These are synced to the cloud (JSONBin).</p>
 <div class="admin-list" id="adminList"></div>
 </div>
+
+<!-- Add / edit MUST SEE -->
+<div class="admin-panel">
+<h3 id="msFormTitle">Add a Must See item</h3>
+<p class="sub">Share a game, article, PDF, or project.</p>
+<form id="mustseeForm">
+<div class="field-row">
+<div class="field">
+<label for="ms-title">Title</label>
+<input type="text" id="ms-title" name="title" placeholder="My awesome game" required />
+</div>
+<div class="field">
+<label for="ms-slug">URL slug</label>
+<input type="text" id="ms-slug" name="slug" placeholder="my-awesome-game" />
+<div class="hint">Leave blank to auto-generate.</div>
+</div>
+</div>
+<div class="field-row">
+<div class="field">
+<label for="ms-type">Type</label>
+<select id="ms-type" name="type">
+<option value="game">Game</option>
+<option value="article">Article</option>
+<option value="pdf">PDF</option>
+<option value="project">Project</option>
+</select>
+</div>
+<div class="field">
+<label for="ms-blurb">Short description</label>
+<input type="text" id="ms-blurb" name="blurb" placeholder="One line summary." />
+</div>
+</div>
+<div class="field">
+<label for="ms-link">External Link (optional)</label>
+<input type="url" id="ms-link" name="link" placeholder="https://drive.google.com/my-pdf or https://my-game.com" />
+<div class="hint">Link to a PDF, external game, or project website.</div>
+</div>
+<div class="field">
+<label for="ms-content">Embedded Content (optional)</label>
+<textarea id="ms-content" name="content" placeholder="Paste raw HTML/JS/CSS here to embed directly on your site." style="min-height:180px;"></textarea>
+<div class="hint">Use this for articles or embedded games. If provided, this will be shown in an iframe on the detail page.</div>
+</div>
+<div class="cta-row">
+<button type="submit" class="btn btn-primary" id="msSaveBtn">Save Must See Item</button>
+<button type="button" class="btn btn-ghost" id="msResetBtn">Clear form</button>
+</div>
+<p class="status" id="msFormStatus" aria-live="polite"></p>
+</form>
+</div>
+<!-- List custom Must See -->
+<div class="admin-panel">
+<h3>Your Must See items</h3>
+<p class="sub">These are synced to the cloud (JSONBin).</p>
+<div class="admin-list" id="msAdminList"></div>
+</div>
+
 <!-- Export -->
 <div class="admin-panel">
 <h3>Export code</h3>
@@ -592,7 +606,6 @@ sync across devices. The password is just a soft gate.
 </div>
 </section>
 </div>
-
 <!-- ============ CONTACT ============ -->
 <div class="view" id="view-contact" data-view="contact">
 <header class="hero wrap" style="padding-bottom:40px;">
@@ -621,7 +634,7 @@ is open and I promise to be friendly.
 <p>Pretty much anything, but especially these.</p>
 </div>
 <div class="interest-list">
-<div class="interest-item"><h3>Collaborations</h3><p>Building something together, reviewing ideas, or bouncing concepts around.</p></div>
+<div class="interest-item"><h3>Collaborations</h3><p>Building something together, reviewing code, or bouncing ideas around.</p></div>
 <div class="interest-item"><h3>Math &amp; Science</h3><p>Homework help, interesting problems, or just a good physics argument.</p></div>
 <div class="interest-item"><h3>Cheese &amp; Critters</h3><p>Yes, really. Send me your favourite cheese and your best raccoon sighting.</p></div>
 <div class="interest-item"><h3>Aviation &amp; Medicine</h3><p>Flight planning, aerodynamics, or anything anesthesiology-adjacent.</p></div>
@@ -631,7 +644,7 @@ is open and I promise to be friendly.
 </main>
 <footer>
 <div class="wrap">
-<div>© <span id="year"></span> Ethan · Built with AI (and a little hand-coding)</div>
+<div>© <span id="year"></span> Ethan</div>
 <a href="mailto:ethankwan1@outlook.com">ethankwan1@outlook.com</a>
 </div>
 </footer>
@@ -640,11 +653,12 @@ is open and I promise to be friendly.
 CONFIG
 ========================================================= */
 var ADMIN_PASSWORD = "ethan";
+var NEWSLETTER_ENDPOINT = ""; 
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
-var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq";
-var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";
+var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq"; 
+var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";  
 // ================================
 
 /* =========================================================
@@ -656,7 +670,7 @@ slug: "math",
 title: "Math Expression Solver",
 blurb: "A web app that parses and solves algebraic expressions step-by-step.",
 tags: ["JavaScript", "Parser", "Education"],
-appUrl: "",
+appUrl: "", 
 appCode: "",
 sections: [
 { h: "What it does", p: [
@@ -804,6 +818,7 @@ var ADMIN_KEY = "ethan_admin_authed";
 var USER_KEY = "ethan_user_session";
 var projectsCache = [];
 var usersCache = [];
+var mustseeCache = [];
 
 function esc(s) {
 return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -811,32 +826,26 @@ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c
 });
 }
 function slugify(s) {
-return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "project";
+return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "item";
 }
 
 // Simple Base64 obfuscation for demo purposes (NOT SECURE)
 function encodePass(s) { return btoa(unescape(encodeURIComponent(s))); }
-function decodePass(s) {
-try { return decodeURIComponent(escape(atob(s))); } catch (e) { return ""; }
-}
+function decodePass(s) { return decodeURIComponent(escape(atob(s))); }
 
 // FETCH FROM CLOUD
 async function fetchData() {
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-var res = await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID + "/latest", {
+const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
 headers: { "X-Master-Key": JSONBIN_API_KEY }
 });
 if (res.ok) {
-var data = await res.json();
+const data = await res.json();
 var record = data.record || {};
-if (Array.isArray(record)) {
-projectsCache = record;
-usersCache = [];
-} else {
 projectsCache = Array.isArray(record.projects) ? record.projects : [];
 usersCache = Array.isArray(record.users) ? record.users : [];
-}
+mustseeCache = Array.isArray(record.mustsee) ? record.mustsee : [];
 return;
 }
 } catch (e) { console.error("JSONBin fetch failed.", e); }
@@ -845,23 +854,25 @@ return;
 try {
 projectsCache = JSON.parse(localStorage.getItem("ethan_projects") || "[]");
 usersCache = JSON.parse(localStorage.getItem("ethan_users") || "[]");
-} catch (e) { projectsCache = []; usersCache = []; }
+mustseeCache = JSON.parse(localStorage.getItem("ethan_mustsee") || "[]");
+} catch(e) {}
 }
 
 // SAVE TO CLOUD
 async function saveData() {
-try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch (e) {}
-try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch (e) {}
+try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch(e) {}
+try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch(e) {}
+try { localStorage.setItem("ethan_mustsee", JSON.stringify(mustseeCache)); } catch(e) {}
 
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID, {
+await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
 method: "PUT",
 headers: {
 "Content-Type": "application/json",
 "X-Master-Key": JSONBIN_API_KEY
 },
-body: JSON.stringify({ projects: projectsCache, users: usersCache })
+body: JSON.stringify({ projects: projectsCache, users: usersCache, mustsee: mustseeCache }) 
 });
 } catch (e) { console.error("JSONBin save failed.", e); }
 }
@@ -885,13 +896,13 @@ return result;
 }
 
 /* =========================================================
-AUTH SYSTEM (localStorage session)
+AUTH SYSTEM (Using localStorage for persistent login)
 ========================================================= */
 function isUserLoggedIn() {
-try { return localStorage.getItem(USER_KEY) !== null; } catch (e) { return false; }
+try { return localStorage.getItem(USER_KEY) !== null; } catch(e) { return false; }
 }
 function getLoggedInUser() {
-try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch (e) { return null; }
+try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch(e) { return null; }
 }
 function updateNavAuth() {
 var container = document.getElementById("nav-auth-container");
@@ -899,20 +910,16 @@ if (!container) return;
 
 if (isUserLoggedIn()) {
 var u = getLoggedInUser();
-container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u && u.username ? u.username : "Account") + ' (Logout)</a>';
-var lo = document.getElementById("nav-logout");
-if (lo) {
-lo.addEventListener("click", function (e) {
+container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u.username) + ' (Logout)</a>';
+document.getElementById("nav-logout").addEventListener("click", function(e) {
 e.preventDefault();
 localStorage.removeItem(USER_KEY);
 updateNavAuth();
 window.location.hash = "#home";
 });
-}
 } else {
 container.innerHTML = '<a href="#auth" data-nav="auth" id="nav-login">Login</a>';
 }
-if (typeof window.__applyNavActive === "function") window.__applyNavActive();
 }
 
 // Login/Signup Form Handler
@@ -935,7 +942,7 @@ subtitle.textContent = "Join to access member features.";
 submitBtn.textContent = "Sign Up";
 toggleBtn.textContent = "Already have an account? Log in";
 confirmField.style.display = "block";
-form.elements.password.setAttribute("autocomplete", "new-password");
+form.elements.password.autocomplete = "new-password";
 form.elements.confirmPassword.required = true;
 } else {
 title.textContent = "Welcome back.";
@@ -943,7 +950,7 @@ subtitle.textContent = "Log in to your account.";
 submitBtn.textContent = "Log In";
 toggleBtn.textContent = "Don't have an account? Sign up";
 confirmField.style.display = "none";
-form.elements.password.setAttribute("autocomplete", "current-password");
+form.elements.password.autocomplete = "current-password";
 form.elements.confirmPassword.required = false;
 }
 status.textContent = "";
@@ -970,21 +977,14 @@ if (isSignupMode && password !== confirmPassword) {
 status.textContent = "Passwords do not match.";
 status.className = "status err"; return;
 }
-if (isSignupMode && password.length < 4) {
-status.textContent = "Password must be at least 4 characters.";
-status.className = "status err"; return;
-}
 
-status.textContent = "Processing…";
+status.textContent = "Processing...";
 status.className = "status";
 
 await fetchData();
 
 if (isSignupMode) {
-var taken = usersCache.some(function (u) {
-return String(u.username || "").toLowerCase() === username.toLowerCase();
-});
-if (taken) {
+if (usersCache.find(u => u.username.toLowerCase() === username.toLowerCase())) {
 status.textContent = "Username already taken.";
 status.className = "status err"; return;
 }
@@ -992,19 +992,17 @@ usersCache.push({ username: username, password: encodePass(password) });
 await saveData();
 localStorage.setItem(USER_KEY, JSON.stringify({ username: username }));
 updateNavAuth();
-status.textContent = "Account created! Logging you in…";
+status.textContent = "Account created! Logging you in...";
 status.className = "status ok";
-setTimeout(function () { window.location.hash = "#home"; }, 900);
+setTimeout(() => { window.location.hash = "#home"; }, 1000);
 } else {
-var user = usersCache.filter(function (u) {
-return String(u.username || "").toLowerCase() === username.toLowerCase() && decodePass(u.password) === password;
-})[0];
+var user = usersCache.find(u => u.username.toLowerCase() === username.toLowerCase() && decodePass(u.password) === password);
 if (user) {
 localStorage.setItem(USER_KEY, JSON.stringify({ username: user.username }));
 updateNavAuth();
 status.textContent = "Logged in successfully!";
 status.className = "status ok";
-setTimeout(function () { window.location.hash = "#home"; }, 900);
+setTimeout(() => { window.location.hash = "#home"; }, 1000);
 } else {
 status.textContent = "Invalid username or password.";
 status.className = "status err";
@@ -1037,6 +1035,82 @@ if (full) full.innerHTML = all.map(projectRowHtml).join("") || '<p style="color:
 }
 
 /* =========================================================
+RENDER: MUST SEE LISTS
+========================================================= */
+function mustseeCardHtml(item) {
+var typeLabels = { game: "🎮 Game", article: "📝 Article", pdf: "📄 PDF", project: "💻 Project" };
+return '<a class="mustsee-card" href="#mustsee-' + esc(item.slug) + '">' +
+'<span class="type-badge">' + (typeLabels[item.type] || item.type) + '</span>' +
+'<h3>' + esc(item.title) + '</h3>' +
+'<p>' + esc(item.blurb || "") + '</p>' +
+'<span class="read-more">View →</span>' +
+'</a>';
+}
+function renderMustSeeList() {
+var host = document.getElementById("mustseeList");
+if (!host) return;
+if (!mustseeCache.length) {
+host.innerHTML = '<p style="color:var(--muted); grid-column: 1 / -1;">No Must See items yet. Add some in the Admin panel!</p>';
+return;
+}
+host.innerHTML = mustseeCache.map(mustseeCardHtml).join("");
+}
+
+/* =========================================================
+RENDER: MUST SEE DETAIL
+========================================================= */
+function renderMustSeeDetail(slug) {
+var host = document.getElementById("mustseeDetailHost");
+if (!host) return;
+var item = mustseeCache.filter(function (x) { return x.slug === slug; })[0];
+if (!item) {
+host.innerHTML = '<header class="project-hero wrap"><a class="back" href="#mustsee">← Must See</a><h1>Item not found</h1><p class="lede">That item doesn\'t exist (or was deleted).</p></header><section class="project-body wrap"><div class="actions"><a class="btn btn-primary" href="#mustsee">Back to Must See</a></div></section>';
+return;
+}
+var typeLabels = { game: "🎮 Game", article: "📝 Article", pdf: "📄 PDF", project: "💻 Project" };
+var html = '<header class="project-hero wrap">';
+html += '<a class="back" href="#mustsee">← Must See</a>';
+html += '<div class="meta-row"><span>' + (typeLabels[item.type] || item.type) + '</span></div>';
+html += '<h1>' + esc(item.title) + '</h1>';
+if (item.blurb) html += '<p class="lede">' + esc(item.blurb) + '</p>';
+html += '</header><section class="project-body wrap">';
+
+// Content / Embed logic
+if (item.content) {
+html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fafafa;">';
+html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
+html += '<span>Live Preview</span>';
+html += '</div>';
+html += '<iframe id="mustseeFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
+} else if (item.link) {
+// If it's a PDF, embed it. Otherwise, show a button.
+if (item.type === 'pdf') {
+html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fafafa;">';
+html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
+html += '<span>PDF Preview</span>';
+html += '<a href="' + esc(item.link) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
+html += '</div>';
+html += '<iframe src="' + esc(item.link) + '" style="width:100%; height:800px; border:none; display:block;"></iframe></div>';
+} else {
+html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">';
+html += '<a class="btn btn-primary" href="' + esc(item.link) + '" target="_blank" rel="noopener">Open Link ↗</a>';
+html += '</div>';
+}
+}
+
+html += '<div class="actions">' +
+'<a class="btn btn-ghost" href="#mustsee">Back to Must See</a>' +
+'</div></section>';
+host.innerHTML = html;
+
+var frame = document.getElementById("mustseeFrame");
+if (frame && item.content) {
+var blob = new Blob([item.content], { type: "text/html" });
+frame.src = URL.createObjectURL(blob);
+}
+}
+
+/* =========================================================
 RENDER: PROJECT DETAIL
 ========================================================= */
 function renderProjectDetail(slug) {
@@ -1061,9 +1135,9 @@ html += '<span>Live App Preview</span>';
 if (p.appUrl) {
 var url = p.appUrl;
 if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-html += '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
+html += '<a href="' + esc(url) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
 }
-html += '</div><iframe id="liveAppFrame" title="Live app preview" style="width:100%; height:600px; border:none; display:block; background:#fff;" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe></div>';
+html += '</div><iframe id="liveAppFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
 }
 
 (p.sections || []).forEach(function (s) {
@@ -1076,62 +1150,48 @@ host.innerHTML = html;
 
 var frame = document.getElementById("liveAppFrame");
 if (frame) {
-if (p.appCode) {
-var blob = new Blob([p.appCode], { type: "text/html" });
-frame.src = URL.createObjectURL(blob);
-} else if (p.appUrl) {
-var u2 = p.appUrl;
-if (!/^https?:\/\//i.test(u2)) u2 = "https://" + u2;
-frame.src = u2;
-}
+if (p.appCode) { var blob = new Blob([p.appCode], { type: "text/html" }); frame.src = URL.createObjectURL(blob); }
+else if (p.appUrl) { var url = p.appUrl; if (!/^https?:\/\//i.test(url)) url = "https://" + url; frame.src = url; }
 }
 }
 
 /* =========================================================
 ROUTER
 ========================================================= */
-var routerRender = null;
 (function () {
 var views = document.querySelectorAll(".view");
-
+var navLinks = document.querySelectorAll("[data-nav]");
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-if (hash.indexOf("project-") === 0) return hash;
+if (hash === "project-detail") return "home";
+if (hash === "mustsee-detail") return "mustsee";
 if (document.getElementById("view-" + hash)) return hash;
 return "home";
 }
-
-function applyNavActive(navKey) {
-document.querySelectorAll("[data-nav]").forEach(function (l) {
-l.classList.toggle("active", l.getAttribute("data-nav") === navKey);
-});
-}
-window.__applyNavActive = function () { applyNavActive(window.__currentNavKey || "home"); };
-
 function render() {
 var route = getRoute();
 var isDetail = route.indexOf("project-") === 0;
-var slug = isDetail ? route.slice("project-".length) : null;
+var isMustSeeDetail = route.indexOf("mustsee-") === 0;
+var slug = null;
+if (isDetail) slug = route.slice("project-".length);
+if (isMustSeeDetail) slug = route.slice("mustsee-".length);
 
 views.forEach(function (v) {
 if (v.dataset.view === "project-detail") v.classList.toggle("active", isDetail);
+else if (v.dataset.view === "mustsee-detail") v.classList.toggle("active", isMustSeeDetail);
 else v.classList.toggle("active", v.dataset.view === route);
 });
-
 if (isDetail) renderProjectDetail(slug);
+if (isMustSeeDetail) renderMustSeeDetail(slug);
 
-var navKey = isDetail ? "projects" : route;
-window.__currentNavKey = navKey;
-applyNavActive(navKey);
-
+var navKey = isDetail ? "projects" : (isMustSeeDetail ? "mustsee" : route);
+navLinks.forEach(function (l) { l.classList.toggle("active", l.dataset.nav === navKey); });
 if (route === "admin") renderAdmin();
 if (route === "newsletter") updateSubCount();
-
 window.scrollTo({ top: 0, behavior: "auto" });
 }
-
 window.addEventListener("hashchange", render);
-routerRender = render;
+window.addEventListener("load", render);
 render();
 })();
 
@@ -1145,10 +1205,8 @@ var factBtn = document.getElementById("factBtn");
 var last = -1;
 function show() {
 if (!factText) return;
-var i;
-do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
-last = i;
-factText.style.opacity = "0";
+var i; do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
+last = i; factText.style.opacity = "0";
 setTimeout(function () { factText.textContent = facts[i]; factText.style.opacity = "1"; }, 150);
 }
 if (factBtn) factBtn.addEventListener("click", show);
@@ -1156,7 +1214,7 @@ show();
 })();
 
 /* =========================================================
-NEWSLETTER (Buttondown handles submission directly)
+NEWSLETTER (Buttondown Handler)
 ========================================================= */
 function updateSubCount() {
 var el = document.getElementById("subCount");
@@ -1168,209 +1226,114 @@ ADMIN
 ========================================================= */
 function isAuthed() { try { return sessionStorage.getItem(ADMIN_KEY) === "1"; } catch (e) { return false; } }
 function setAuthed(v) { try { if (v) sessionStorage.setItem(ADMIN_KEY, "1"); else sessionStorage.removeItem(ADMIN_KEY); } catch (e) {} }
-
 function renderAdmin() {
 var gate = document.getElementById("adminGate");
 var panel = document.getElementById("adminPanel");
 if (!gate || !panel) return;
-if (isAuthed()) { gate.style.display = "none"; panel.style.display = "block"; renderAdminList(); }
+if (isAuthed()) { gate.style.display = "none"; panel.style.display = "block"; renderAdminList(); renderMustSeeAdminList(); }
 else { gate.style.display = "block"; panel.style.display = "none"; }
 }
-
 function renderAdminList() {
 var host = document.getElementById("adminList");
 if (!host) return;
-if (!projectsCache.length) {
-host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>';
-return;
-}
+if (!projectsCache.length) { host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No custom projects yet.</p>'; return; }
 host.innerHTML = projectsCache.map(function (p) {
 return '<div class="admin-item"><div><h4>' + esc(p.title) + '</h4><div class="meta">#' + esc(p.slug) + ' · ' + (p.tags || []).length + ' tag(s)</div></div><div class="admin-actions"><button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(p.slug) + '">Edit</button><button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(p.slug) + '">Delete</button></div></div>';
 }).join("");
-
-host.querySelectorAll("[data-edit]").forEach(function (btn) {
-btn.addEventListener("click", function () { loadIntoForm(btn.getAttribute("data-edit")); });
-});
+host.querySelectorAll("[data-edit]").forEach(function (btn) { btn.addEventListener("click", function () { loadIntoForm(btn.dataset.edit); }); });
 host.querySelectorAll("[data-delete]").forEach(function (btn) {
 btn.addEventListener("click", async function () {
 if (!confirm("Delete this project?")) return;
-var slug = btn.getAttribute("data-delete");
-projectsCache = projectsCache.filter(function (p) { return p.slug !== slug; });
-await saveData();
-renderAdminList();
-renderProjectLists();
+projectsCache = projectsCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
+await saveData(); renderAdminList(); renderProjectLists();
 });
 });
 }
-
+function renderMustSeeAdminList() {
+var host = document.getElementById("msAdminList");
+if (!host) return;
+if (!mustseeCache.length) { host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No Must See items yet.</p>'; return; }
+host.innerHTML = mustseeCache.map(function (p) {
+return '<div class="admin-item"><div><h4>' + esc(p.title) + '</h4><div class="meta">#' + esc(p.slug) + ' · ' + esc(p.type) + '</div></div><div class="admin-actions"><button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(p.slug) + '">Edit</button><button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(p.slug) + '">Delete</button></div></div>';
+}).join("");
+host.querySelectorAll("[data-edit]").forEach(function (btn) { btn.addEventListener("click", function () { loadMustSeeIntoForm(btn.dataset.edit); }); });
+host.querySelectorAll("[data-delete]").forEach(function (btn) {
+btn.addEventListener("click", async function () {
+if (!confirm("Delete this Must See item?")) return;
+mustseeCache = mustseeCache.filter(function (p) { return p.slug !== btn.dataset.delete; });
+await saveData(); renderMustSeeAdminList(); renderMustSeeList();
+});
+});
+}
 function loadIntoForm(slug) {
 var p = projectsCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
 var f = document.getElementById("projectForm");
-if (!f) return;
-f.elements.title.value = p.title || "";
-f.elements.slug.value = p.slug || "";
-f.elements.blurb.value = p.blurb || "";
-f.elements.tags.value = (p.tags || []).join(", ");
-f.elements.appUrl.value = p.appUrl || "";
-f.elements.appCode.value = p.appCode || "";
+f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.blurb.value = p.blurb || ""; f.elements.tags.value = (p.tags || []).join(", "); f.elements.appUrl.value = p.appUrl || ""; f.elements.appCode.value = p.appCode || "";
 var does = "", how = [], learned = [];
-(p.sections || []).forEach(function (s) {
-if (s.h === "What it does") does = (s.p || []).join("\n");
-if (s.h === "How it works") how = s.ul || [];
-if (s.h === "What I learned") learned = s.ul || [];
-});
-f.elements.does.value = does;
-f.elements.how.value = how.join("\n");
-f.elements.learned.value = learned.join("\n");
-document.getElementById("formTitle").textContent = "Edit project";
-document.getElementById("saveBtn").textContent = "Update project";
+(p.sections || []).forEach(function (s) { if (s.h === "What it does") does = (s.p || []).join("\n"); if (s.h === "How it works") how = s.ul || []; if (s.h === "What I learned") learned = s.ul || []; });
+f.elements.does.value = does; f.elements.how.value = how.join("\n"); f.elements.learned.value = learned.join("\n");
+document.getElementById("formTitle").textContent = "Edit project"; document.getElementById("saveBtn").textContent = "Update project";
 window.scrollTo({ top: 200, behavior: "smooth" });
 }
-
-function clearForm() {
-var f = document.getElementById("projectForm");
-if (!f) return;
-f.reset();
-document.getElementById("formTitle").textContent = "Add a project";
-document.getElementById("saveBtn").textContent = "Save project";
-document.getElementById("formStatus").textContent = "";
-document.getElementById("formStatus").className = "status";
+function loadMustSeeIntoForm(slug) {
+var p = mustseeCache.filter(function (x) { return x.slug === slug; })[0];
+if (!p) return;
+var f = document.getElementById("mustseeForm");
+f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.type.value = p.type || "game"; f.elements.blurb.value = p.blurb || ""; f.elements.link.value = p.link || ""; f.elements.content.value = p.content || "";
+document.getElementById("msFormTitle").textContent = "Edit Must See item"; document.getElementById("msSaveBtn").textContent = "Update Must See Item";
+window.scrollTo({ top: 600, behavior: "smooth" });
 }
+function clearForm() { var f = document.getElementById("projectForm"); f.reset(); document.getElementById("formTitle").textContent = "Add a project"; document.getElementById("saveBtn").textContent = "Save project"; document.getElementById("formStatus").textContent = ""; }
+function clearMustSeeForm() { var f = document.getElementById("mustseeForm"); f.reset(); document.getElementById("msFormTitle").textContent = "Add a Must See item"; document.getElementById("msSaveBtn").textContent = "Save Must See Item"; document.getElementById("msFormStatus").textContent = ""; }
 
 (function () {
 var gateForm = document.getElementById("gateForm");
-if (gateForm) {
-gateForm.addEventListener("submit", function (e) {
-e.preventDefault();
-var st = document.getElementById("gateStatus");
-if (gateForm.elements.pw.value === ADMIN_PASSWORD) {
-setAuthed(true);
-gateForm.reset();
-st.textContent = "";
-renderAdmin();
-} else {
-st.textContent = "Wrong password.";
-st.className = "status err";
-}
-});
-}
+if (gateForm) { gateForm.addEventListener("submit", function (e) { e.preventDefault(); if (gateForm.elements.pw.value === ADMIN_PASSWORD) { setAuthed(true); gateForm.reset(); renderAdmin(); } else { document.getElementById("gateStatus").textContent = "Wrong password."; document.getElementById("gateStatus").className = "status err"; } }); }
 
+// PROJECT FORM
 var projectForm = document.getElementById("projectForm");
 if (projectForm) {
 projectForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
-var st = document.getElementById("formStatus");
-
-var title = (f.elements.title.value || "").trim();
-var slug = slugify((f.elements.slug.value || "").trim() || title);
-var blurb = (f.elements.blurb.value || "").trim();
-var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-var appUrl = (f.elements.appUrl.value || "").trim();
-var appCode = (f.elements.appCode.value || "").trim();
-var does = (f.elements.does.value || "").trim();
-var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-
-if (!title) {
-st.textContent = "Title is required.";
-st.className = "status err";
-return;
-}
-
-var sections = [];
-if (does) sections.push({ h: "What it does", p: [does] });
-if (how.length) sections.push({ h: "How it works", ul: how });
-if (learned.length) sections.push({ h: "What I learned", ul: learned });
-
+var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
+var blurb = (f.elements.blurb.value || "").trim(); var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+var appUrl = (f.elements.appUrl.value || "").trim(); var appCode = (f.elements.appCode.value || "").trim();
+var does = (f.elements.does.value || "").trim(); var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean); var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+if (!title) { document.getElementById("formStatus").textContent = "Title is required."; document.getElementById("formStatus").className = "status err"; return; }
+var sections = []; if (does) sections.push({ h: "What it does", p: [does] }); if (how.length) sections.push({ h: "How it works", ul: how }); if (learned.length) sections.push({ h: "What I learned", ul: learned });
 var project = { slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections };
-
-var idx = -1;
-projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; });
-if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
-
-await saveData();
-clearForm();
-renderAdminList();
-renderProjectLists();
-
-st.textContent = "Saved to cloud: " + title;
-st.className = "status ok";
-setTimeout(function () { st.textContent = ""; }, 2500);
+var idx = -1; projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
+await saveData(); clearForm(); renderAdminList(); renderProjectLists(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
 });
 }
 
-var resetBtn = document.getElementById("resetBtn");
-if (resetBtn) resetBtn.addEventListener("click", clearForm);
+// MUST SEE FORM
+var mustseeForm = document.getElementById("mustseeForm");
+if (mustseeForm) {
+mustseeForm.addEventListener("submit", async function (e) {
+e.preventDefault();
+var f = e.target;
+var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
+var type = f.elements.type.value; var blurb = (f.elements.blurb.value || "").trim();
+var link = (f.elements.link.value || "").trim(); var content = (f.elements.content.value || "").trim();
+if (!title) { document.getElementById("msFormStatus").textContent = "Title is required."; document.getElementById("msFormStatus").className = "status err"; return; }
+var item = { slug: slug, title: title, type: type, blurb: blurb, link: link, content: content };
+var idx = -1; mustseeCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) mustseeCache[idx] = item; else mustseeCache.push(item);
+await saveData(); clearMustSeeForm(); renderMustSeeAdminList(); renderMustSeeList(); document.getElementById("msFormStatus").textContent = "Saved to cloud: " + title; document.getElementById("msFormStatus").className = "status ok"; setTimeout(function () { document.getElementById("msFormStatus").textContent = ""; }, 2500);
+});
+}
+
+var resetBtn = document.getElementById("resetBtn"); if (resetBtn) resetBtn.addEventListener("click", clearForm);
+var msResetBtn = document.getElementById("msResetBtn"); if (msResetBtn) msResetBtn.addEventListener("click", clearMustSeeForm);
 
 var exportBtn = document.getElementById("exportBtn");
-if (exportBtn) {
-exportBtn.addEventListener("click", function () {
-var area = document.getElementById("exportArea");
-var status = document.getElementById("exportStatus");
-if (!projectsCache.length) {
-area.value = "";
-status.textContent = "No custom projects to export.";
-status.className = "status err";
-return;
-}
-area.value = JSON.stringify(projectsCache, null, 2);
-status.textContent = "Paste this into the BUILTIN_PROJECTS array.";
-status.className = "status ok";
-});
-}
-
-var copyBtn = document.getElementById("copyBtn");
-if (copyBtn) {
-copyBtn.addEventListener("click", function () {
-var area = document.getElementById("exportArea");
-var status = document.getElementById("exportStatus");
-if (!area.value) {
-status.textContent = "Generate an export first.";
-status.className = "status err";
-return;
-}
-area.select();
-try {
-navigator.clipboard.writeText(area.value).then(function () {
-status.textContent = "Copied to clipboard.";
-status.className = "status ok";
-}).catch(function () {
-document.execCommand("copy");
-status.textContent = "Copied.";
-status.className = "status ok";
-});
-} catch (e) {
-document.execCommand("copy");
-status.textContent = "Copied.";
-status.className = "status ok";
-}
-});
-}
-
+if (exportBtn) { exportBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); var status = document.getElementById("exportStatus"); if (!projectsCache.length) { area.value = ""; status.textContent = "No custom projects to export."; status.className = "status err"; return; } area.value = JSON.stringify(projectsCache, null, 2); status.textContent = "Paste this into the BUILTIN_PROJECTS array."; status.className = "status ok"; }); }
+var copyBtn = document.getElementById("copyBtn"); if (copyBtn) { copyBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); if (!area.value) { document.getElementById("exportStatus").textContent = "Generate an export first."; document.getElementById("exportStatus").className = "status err"; return; } area.select(); try { navigator.clipboard.writeText(area.value).then(function () { document.getElementById("exportStatus").textContent = "Copied to clipboard."; document.getElementById("exportStatus").className = "status ok"; }); } catch (e) { document.execCommand("copy"); document.getElementById("exportStatus").textContent = "Copied."; document.getElementById("exportStatus").className = "status ok"; } }); }
 var downloadBtn = document.getElementById("downloadBtn");
-if (downloadBtn) {
-downloadBtn.addEventListener("click", function () {
-var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" });
-var url = URL.createObjectURL(blob);
-var a = document.createElement("a");
-a.href = url;
-a.download = "projects.json";
-document.body.appendChild(a);
-a.click();
-a.remove();
-URL.revokeObjectURL(url);
-});
-}
-
-var logoutBtn = document.getElementById("logoutBtn");
-if (logoutBtn) {
-logoutBtn.addEventListener("click", function () {
-setAuthed(false);
-renderAdmin();
-});
-}
+if (downloadBtn) { downloadBtn.addEventListener("click", function () { var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" }); var url = URL.createObjectURL(blob); var a = document.createElement("a"); a.href = url; a.download = "projects.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }); }
+var logoutBtn = document.getElementById("logoutBtn"); if (logoutBtn) { logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(); }); }
 })();
 
 /* =========================================================
@@ -1379,11 +1342,11 @@ INIT
 async function init() {
 await fetchData();
 renderProjectLists();
+renderMustSeeList();
 updateNavAuth();
-var y = document.getElementById("year");
-if (y) y.textContent = new Date().getFullYear();
+document.getElementById("year").textContent = new Date().getFullYear();
 updateSubCount();
-if (typeof routerRender === "function") routerRender();
+if (window.location.hash === "#admin") renderAdmin();
 }
 init();
 </script>
