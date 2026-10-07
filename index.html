@@ -382,7 +382,7 @@ No spam, no schedule — just when I have something worth sharing.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0; max-width:520px;">
-    <!-- BUTTONDOWN FORM -->
+    <!-- BUTTONDOWN FORM — replace YOUR_BUTTONDOWN_USERNAME with your real username -->
     <form action="https://buttondown.com/api/emails/embed-subscribe/YOUR_BUTTONDOWN_USERNAME" method="post" class="embeddable-buttondown-form" style="margin-bottom: 20px;">
       <div class="field">
         <label for="bd-email">Email address</label>
@@ -398,7 +398,6 @@ Prefer email? Just write to
 <a href="mailto:ethankwan1@outlook.com?subject=Newsletter%20signup" style="color:var(--fg)">ethankwan1@outlook.com</a>
 with the subject "Newsletter signup".
 </div>
-<p class="sub-count" id="subCount"></p>
 </section>
 </div>
 <!-- ============ AUTH (LOGIN / SIGNUP) ============ -->
@@ -410,18 +409,18 @@ with the subject "Newsletter signup".
 </header>
 <section class="wrap" style="border-top:none; padding-top:0; max-width:420px;">
 <div class="admin-panel" style="padding: 32px;">
-<form id="authForm">
+<form id="authForm" novalidate>
 <div class="field">
 <label for="authUser">Username</label>
 <input type="text" id="authUser" name="username" placeholder="Your username" required autocomplete="username" />
 </div>
-<div class="field" id="confirmPassField" style="display:none;">
-<label for="authPassConfirm">Confirm Password</label>
-<input type="password" id="authPassConfirm" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" />
-</div>
 <div class="field">
 <label for="authPass">Password</label>
 <input type="password" id="authPass" name="password" placeholder="Your password" required autocomplete="current-password" />
+</div>
+<div class="field" id="confirmPassField" style="display:none;">
+<label for="authPassConfirm">Confirm Password</label>
+<input type="password" id="authPassConfirm" name="confirmPassword" placeholder="Confirm your password" autocomplete="new-password" />
 </div>
 <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width:100%;">Log In</button>
 <p class="status" id="authStatus" aria-live="polite"></p>
@@ -490,7 +489,7 @@ appear on any device you visit this site from.
 </div>
 <div class="field">
 <label for="p-appUrl">App URL (optional)</label>
-<input type="url" id="p-appUrl" name="appUrl" placeholder="https://my-cool-app.com" />
+<input type="text" id="p-appUrl" name="appUrl" placeholder="https://my-cool-app.com" />
 <div class="hint">Link to a live website. We'll add https:// if you forget it.</div>
 </div>
 <div class="field">
@@ -557,7 +556,7 @@ appear on any device you visit this site from.
 </div>
 <div class="field">
 <label for="ms-link">External Link (optional)</label>
-<input type="url" id="ms-link" name="link" placeholder="https://drive.google.com/my-pdf or https://my-game.com" />
+<input type="text" id="ms-link" name="link" placeholder="https://drive.google.com/my-pdf or https://my-game.com" />
 <div class="hint">Link to a PDF, external game, or project website.</div>
 </div>
 <div class="field">
@@ -653,10 +652,11 @@ is open and I promise to be friendly.
 CONFIG
 ========================================================= */
 var ADMIN_PASSWORD = "ethan";
-var NEWSLETTER_ENDPOINT = "";
 var CONTACT_EMAIL = "ethankwan1@outlook.com";
 
 // ====== JSONBIN CLOUD SYNC ======
+// NOTE: this key is visible to anyone who views the page source.
+// It is fine for a personal demo, but do not put anything private here.
 var JSONBIN_API_KEY = "$2a$10$QIxEUtRm7aOh2Xn0UXMC3eTePYc16L/I6Li7AU.7cPfLcmeJvZxuq";
 var JSONBIN_BIN_ID = "6abe7e4cac6210605a0982e5";
 // ================================
@@ -819,6 +819,9 @@ var USER_KEY = "ethan_user_session";
 var projectsCache = [];
 var usersCache = [];
 var mustseeCache = [];
+// Tracks the currently-live blob URL so we can revoke it when we
+// navigate to a different detail page (prevents memory leaks).
+var activeBlobUrl = null;
 
 function esc(s) {
 return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
@@ -827,6 +830,11 @@ return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c
 }
 function slugify(s) {
 return String(s || "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "item";
+}
+function normalizeUrl(u) {
+u = String(u || "").trim();
+if (!u) return "";
+return /^https?:\/\//i.test(u) ? u : "https://" + u;
 }
 
 // Simple Base64 obfuscation for demo purposes (NOT SECURE)
@@ -837,7 +845,7 @@ function decodePass(s) { try { return decodeURIComponent(escape(atob(s))); } cat
 async function fetchData() {
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+const res = await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID + "/latest", {
 headers: { "X-Master-Key": JSONBIN_API_KEY }
 });
 if (res.ok) {
@@ -855,18 +863,18 @@ try {
 projectsCache = JSON.parse(localStorage.getItem("ethan_projects") || "[]");
 usersCache = JSON.parse(localStorage.getItem("ethan_users") || "[]");
 mustseeCache = JSON.parse(localStorage.getItem("ethan_mustsee") || "[]");
-} catch(e) {}
+} catch (e) {}
 }
 
 // SAVE TO CLOUD
 async function saveData() {
-try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch(e) {}
-try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch(e) {}
-try { localStorage.setItem("ethan_mustsee", JSON.stringify(mustseeCache)); } catch(e) {}
+try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch (e) {}
+try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch (e) {}
+try { localStorage.setItem("ethan_mustsee", JSON.stringify(mustseeCache)); } catch (e) {}
 
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
-await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
+await fetch("https://api.jsonbin.io/v3/b/" + JSONBIN_BIN_ID, {
 method: "PUT",
 headers: {
 "Content-Type": "application/json",
@@ -899,10 +907,10 @@ return result;
 AUTH SYSTEM (Using localStorage for persistent login)
 ========================================================= */
 function isUserLoggedIn() {
-try { return localStorage.getItem(USER_KEY) !== null; } catch(e) { return false; }
+try { return localStorage.getItem(USER_KEY) !== null; } catch (e) { return false; }
 }
 function getLoggedInUser() {
-try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch(e) { return null; }
+try { return JSON.parse(localStorage.getItem(USER_KEY)); } catch (e) { return null; }
 }
 function updateNavAuth() {
 var container = document.getElementById("nav-auth-container");
@@ -911,11 +919,17 @@ if (!container) return;
 if (isUserLoggedIn()) {
 var u = getLoggedInUser();
 container.innerHTML = '<a href="#" id="nav-logout" style="color:var(--fg); font-weight:500;">' + esc(u.username) + ' (Logout)</a>';
-document.getElementById("nav-logout").addEventListener("click", function(e) {
+document.getElementById("nav-logout").addEventListener("click", function (e) {
 e.preventDefault();
 localStorage.removeItem(USER_KEY);
 updateNavAuth();
+// Re-render even if we're already on #home, otherwise the nav state
+// would be the only thing that changed and no hashchange would fire.
+if (window.location.hash === "#home" || window.location.hash === "") {
+if (typeof renderRoute === "function") renderRoute();
+} else {
 window.location.hash = "#home";
+}
 });
 } else {
 container.innerHTML = '<a href="#auth" data-nav="auth" id="nav-login">Login</a>';
@@ -923,7 +937,7 @@ container.innerHTML = '<a href="#auth" data-nav="auth" id="nav-login">Login</a>'
 }
 
 // Login/Signup Form Handler
-(function() {
+(function () {
 var form = document.getElementById("authForm");
 if (!form) return;
 var status = document.getElementById("authStatus");
@@ -957,13 +971,13 @@ status.textContent = "";
 status.className = "status";
 }
 
-toggleBtn.addEventListener("click", function(e) {
+toggleBtn.addEventListener("click", function (e) {
 e.preventDefault();
 isSignupMode = !isSignupMode;
 updateAuthUI();
 });
 
-form.addEventListener("submit", async function(e) {
+form.addEventListener("submit", async function (e) {
 e.preventDefault();
 var username = (form.elements.username.value || "").trim();
 var password = (form.elements.password.value || "").trim();
@@ -984,7 +998,7 @@ status.className = "status";
 await fetchData();
 
 if (isSignupMode) {
-if (usersCache.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+if (usersCache.find(function (u) { return u.username.toLowerCase() === username.toLowerCase(); })) {
 status.textContent = "Username already taken.";
 status.className = "status err"; return;
 }
@@ -994,15 +1008,17 @@ localStorage.setItem(USER_KEY, JSON.stringify({ username: username }));
 updateNavAuth();
 status.textContent = "Account created! Logging you in...";
 status.className = "status ok";
-setTimeout(() => { window.location.hash = "#home"; }, 1000);
+setTimeout(function () { window.location.hash = "#home"; }, 1000);
 } else {
-var user = usersCache.find(u => u.username.toLowerCase() === username.toLowerCase() && decodePass(u.password) === password);
+var user = usersCache.find(function (u) {
+return u.username.toLowerCase() === username.toLowerCase() && decodePass(u.password) === password;
+});
 if (user) {
 localStorage.setItem(USER_KEY, JSON.stringify({ username: user.username }));
 updateNavAuth();
 status.textContent = "Logged in successfully!";
 status.className = "status ok";
-setTimeout(() => { window.location.hash = "#home"; }, 1000);
+setTimeout(function () { window.location.hash = "#home"; }, 1000);
 } else {
 status.textContent = "Invalid username or password.";
 status.className = "status err";
@@ -1040,7 +1056,7 @@ RENDER: MUST SEE LISTS
 function mustseeCardHtml(item) {
 var typeLabels = { game: "🎮 Game", article: "📝 Article", pdf: "📄 PDF", project: "💻 Project" };
 return '<a class="mustsee-card" href="#mustsee-' + esc(item.slug) + '">' +
-'<span class="type-badge">' + (typeLabels[item.type] || item.type) + '</span>' +
+'<span class="type-badge">' + (typeLabels[item.type] || esc(item.type)) + '</span>' +
 '<h3>' + esc(item.title) + '</h3>' +
 '<p>' + esc(item.blurb || "") + '</p>' +
 '<span class="read-more">View →</span>' +
@@ -1070,7 +1086,7 @@ return;
 var typeLabels = { game: "🎮 Game", article: "📝 Article", pdf: "📄 PDF", project: "💻 Project" };
 var html = '<header class="project-hero wrap">';
 html += '<a class="back" href="#mustsee">← Must See</a>';
-html += '<div class="meta-row"><span>' + (typeLabels[item.type] || item.type) + '</span></div>';
+html += '<div class="meta-row"><span>' + (typeLabels[item.type] || esc(item.type)) + '</span></div>';
 html += '<h1>' + esc(item.title) + '</h1>';
 if (item.blurb) html += '<p class="lede">' + esc(item.blurb) + '</p>';
 html += '</header><section class="project-body wrap">';
@@ -1081,19 +1097,19 @@ html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-
 html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
 html += '<span>Live Preview</span>';
 html += '</div>';
-html += '<iframe id="mustseeFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
+html += '<iframe id="mustseeFrame" title="Embedded content" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
 } else if (item.link) {
 // If it's a PDF, embed it. Otherwise, show a button.
-if (item.type === 'pdf') {
+if (item.type === "pdf") {
 html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fafafa;">';
 html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
 html += '<span>PDF Preview</span>';
-html += '<a href="' + esc(item.link) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
+html += '<a href="' + esc(normalizeUrl(item.link)) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
 html += '</div>';
-html += '<iframe src="' + esc(item.link) + '" style="width:100%; height:800px; border:none; display:block;"></iframe></div>';
+html += '<iframe src="' + esc(normalizeUrl(item.link)) + '" title="PDF preview" style="width:100%; height:800px; border:none; display:block;"></iframe></div>';
 } else {
 html += '<div class="actions" style="margin-top:0; margin-bottom:24px; padding-top:0; border-top:none;">';
-html += '<a class="btn btn-primary" href="' + esc(item.link) + '" target="_blank" rel="noopener">Open Link ↗</a>';
+html += '<a class="btn btn-primary" href="' + esc(normalizeUrl(item.link)) + '" target="_blank" rel="noopener">Open Link ↗</a>';
 html += '</div>';
 }
 }
@@ -1105,8 +1121,10 @@ host.innerHTML = html;
 
 var frame = document.getElementById("mustseeFrame");
 if (frame && item.content) {
+if (activeBlobUrl) { URL.revokeObjectURL(activeBlobUrl); activeBlobUrl = null; }
 var blob = new Blob([item.content], { type: "text/html" });
-frame.src = URL.createObjectURL(blob);
+activeBlobUrl = URL.createObjectURL(blob);
+frame.src = activeBlobUrl;
 }
 }
 
@@ -1133,11 +1151,9 @@ html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-
 html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
 html += '<span>Live App Preview</span>';
 if (p.appUrl) {
-var url = p.appUrl;
-if (!/^https?:\/\//i.test(url)) url = "https://" + url;
-html += '<a href="' + esc(url) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
+html += '<a href="' + esc(normalizeUrl(p.appUrl)) + '" target="_blank" rel="noopener" style="color:var(--muted); text-decoration:none; font-size:0.78rem;">Open in new tab ↗</a>';
 }
-html += '</div><iframe id="liveAppFrame" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
+html += '</div><iframe id="liveAppFrame" title="Live app preview" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
 }
 
 (p.sections || []).forEach(function (s) {
@@ -1150,8 +1166,14 @@ host.innerHTML = html;
 
 var frame = document.getElementById("liveAppFrame");
 if (frame) {
-if (p.appCode) { var blob = new Blob([p.appCode], { type: "text/html" }); frame.src = URL.createObjectURL(blob); }
-else if (p.appUrl) { var url = p.appUrl; if (!/^https?:\/\//i.test(url)) url = "https://" + url; frame.src = url; }
+if (p.appCode) {
+if (activeBlobUrl) { URL.revokeObjectURL(activeBlobUrl); activeBlobUrl = null; }
+var blob = new Blob([p.appCode], { type: "text/html" });
+activeBlobUrl = URL.createObjectURL(blob);
+frame.src = activeBlobUrl;
+} else if (p.appUrl) {
+frame.src = normalizeUrl(p.appUrl);
+}
 }
 }
 
@@ -1163,8 +1185,6 @@ var views = document.querySelectorAll(".view");
 
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-if (hash === "project-detail") return "home";
-if (hash === "mustsee-detail") return "mustsee";
 // Detail routes: #project-<slug> and #mustsee-<slug>
 if (hash.indexOf("project-") === 0) return hash;
 if (hash.indexOf("mustsee-") === 0) return hash;
@@ -1193,7 +1213,6 @@ document.querySelectorAll("[data-nav]").forEach(function (l) {
 l.classList.toggle("active", l.dataset.nav === navKey);
 });
 if (route === "admin") renderAdmin();
-if (route === "newsletter") updateSubCount();
 window.scrollTo({ top: 0, behavior: "auto" });
 }
 
@@ -1213,21 +1232,15 @@ var factBtn = document.getElementById("factBtn");
 var last = -1;
 function show() {
 if (!factText) return;
-var i; do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
-last = i; factText.style.opacity = "0";
+var i;
+do { i = Math.floor(Math.random() * facts.length); } while (facts.length > 1 && i === last);
+last = i;
+factText.style.opacity = "0";
 setTimeout(function () { factText.textContent = facts[i]; factText.style.opacity = "1"; }, 150);
 }
 if (factBtn) factBtn.addEventListener("click", show);
 show();
 })();
-
-/* =========================================================
-NEWSLETTER (Buttondown Handler)
-========================================================= */
-function updateSubCount() {
-var el = document.getElementById("subCount");
-if (el) el.textContent = "";
-}
 
 /* =========================================================
 ADMIN
@@ -1279,9 +1292,14 @@ if (!p) return;
 var f = document.getElementById("projectForm");
 f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.blurb.value = p.blurb || ""; f.elements.tags.value = (p.tags || []).join(", "); f.elements.appUrl.value = p.appUrl || ""; f.elements.appCode.value = p.appCode || "";
 var does = "", how = [], learned = [];
-(p.sections || []).forEach(function (s) { if (s.h === "What it does") does = (s.p || []).join("\n"); if (s.h === "How it works") how = s.ul || []; if (s.h === "What I learned") learned = s.ul || []; });
+(p.sections || []).forEach(function (s) {
+if (s.h === "What it does") does = (s.p || []).join("\n");
+if (s.h === "How it works") how = s.ul || [];
+if (s.h === "What I learned") learned = s.ul || [];
+});
 f.elements.does.value = does; f.elements.how.value = how.join("\n"); f.elements.learned.value = learned.join("\n");
-document.getElementById("formTitle").textContent = "Edit project"; document.getElementById("saveBtn").textContent = "Update project";
+document.getElementById("formTitle").textContent = "Edit project";
+document.getElementById("saveBtn").textContent = "Update project";
 window.scrollTo({ top: 200, behavior: "smooth" });
 }
 function loadMustSeeIntoForm(slug) {
@@ -1289,15 +1307,41 @@ var p = mustseeCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
 var f = document.getElementById("mustseeForm");
 f.elements.title.value = p.title || ""; f.elements.slug.value = p.slug || ""; f.elements.type.value = p.type || "game"; f.elements.blurb.value = p.blurb || ""; f.elements.link.value = p.link || ""; f.elements.content.value = p.content || "";
-document.getElementById("msFormTitle").textContent = "Edit Must See item"; document.getElementById("msSaveBtn").textContent = "Update Must See Item";
+document.getElementById("msFormTitle").textContent = "Edit Must See item";
+document.getElementById("msSaveBtn").textContent = "Update Must See Item";
 window.scrollTo({ top: 600, behavior: "smooth" });
 }
-function clearForm() { var f = document.getElementById("projectForm"); f.reset(); document.getElementById("formTitle").textContent = "Add a project"; document.getElementById("saveBtn").textContent = "Save project"; document.getElementById("formStatus").textContent = ""; }
-function clearMustSeeForm() { var f = document.getElementById("mustseeForm"); f.reset(); document.getElementById("msFormTitle").textContent = "Add a Must See item"; document.getElementById("msSaveBtn").textContent = "Save Must See Item"; document.getElementById("msFormStatus").textContent = ""; }
+function clearForm() {
+var f = document.getElementById("projectForm");
+f.reset();
+document.getElementById("formTitle").textContent = "Add a project";
+document.getElementById("saveBtn").textContent = "Save project";
+document.getElementById("formStatus").textContent = "";
+}
+function clearMustSeeForm() {
+var f = document.getElementById("mustseeForm");
+f.reset();
+document.getElementById("msFormTitle").textContent = "Add a Must See item";
+document.getElementById("msSaveBtn").textContent = "Save Must See Item";
+document.getElementById("msFormStatus").textContent = "";
+}
 
 (function () {
 var gateForm = document.getElementById("gateForm");
-if (gateForm) { gateForm.addEventListener("submit", function (e) { e.preventDefault(); if (gateForm.elements.pw.value === ADMIN_PASSWORD) { setAuthed(true); gateForm.reset(); renderAdmin(); } else { document.getElementById("gateStatus").textContent = "Wrong password."; document.getElementById("gateStatus").className = "status err"; } }); }
+if (gateForm) {
+gateForm.addEventListener("submit", function (e) {
+e.preventDefault();
+if (gateForm.elements.pw.value === ADMIN_PASSWORD) {
+setAuthed(true);
+gateForm.reset();
+renderAdmin();
+} else {
+var s = document.getElementById("gateStatus");
+s.textContent = "Wrong password.";
+s.className = "status err";
+}
+});
+}
 
 // PROJECT FORM
 var projectForm = document.getElementById("projectForm");
@@ -1305,15 +1349,38 @@ if (projectForm) {
 projectForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
-var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
-var blurb = (f.elements.blurb.value || "").trim(); var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
-var appUrl = (f.elements.appUrl.value || "").trim(); var appCode = (f.elements.appCode.value || "").trim();
-var does = (f.elements.does.value || "").trim(); var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean); var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
-if (!title) { document.getElementById("formStatus").textContent = "Title is required."; document.getElementById("formStatus").className = "status err"; return; }
-var sections = []; if (does) sections.push({ h: "What it does", p: [does] }); if (how.length) sections.push({ h: "How it works", ul: how }); if (learned.length) sections.push({ h: "What I learned", ul: learned });
+var title = (f.elements.title.value || "").trim();
+var slug = slugify((f.elements.slug.value || "").trim() || title);
+var blurb = (f.elements.blurb.value || "").trim();
+var tags = (f.elements.tags.value || "").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+var appUrl = (f.elements.appUrl.value || "").trim();
+var appCode = (f.elements.appCode.value || "").trim();
+var does = (f.elements.does.value || "").trim();
+var how = (f.elements.how.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+var learned = (f.elements.learned.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+if (!title) {
+var st = document.getElementById("formStatus");
+st.textContent = "Title is required.";
+st.className = "status err";
+return;
+}
+var sections = [];
+if (does) sections.push({ h: "What it does", p: [does] });
+if (how.length) sections.push({ h: "How it works", ul: how });
+if (learned.length) sections.push({ h: "What I learned", ul: learned });
 var project = { slug: slug, title: title, blurb: blurb, tags: tags, appUrl: appUrl, appCode: appCode, sections: sections };
-var idx = -1; projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
-await saveData(); clearForm(); renderAdminList(); renderProjectLists(); renderRoute(); document.getElementById("formStatus").textContent = "Saved to cloud: " + title; document.getElementById("formStatus").className = "status ok"; setTimeout(function () { document.getElementById("formStatus").textContent = ""; }, 2500);
+var idx = -1;
+projectsCache.forEach(function (p, i) { if (p.slug === slug) idx = i; });
+if (idx >= 0) projectsCache[idx] = project; else projectsCache.push(project);
+await saveData();
+clearForm();
+renderAdminList();
+renderProjectLists();
+renderRoute();
+var st2 = document.getElementById("formStatus");
+st2.textContent = "Saved to cloud: " + title;
+st2.className = "status ok";
+setTimeout(function () { st2.textContent = ""; }, 2500);
 });
 }
 
@@ -1323,25 +1390,96 @@ if (mustseeForm) {
 mustseeForm.addEventListener("submit", async function (e) {
 e.preventDefault();
 var f = e.target;
-var title = (f.elements.title.value || "").trim(); var slug = slugify((f.elements.slug.value || "").trim() || title);
-var type = f.elements.type.value; var blurb = (f.elements.blurb.value || "").trim();
-var link = (f.elements.link.value || "").trim(); var content = (f.elements.content.value || "").trim();
-if (!title) { document.getElementById("msFormStatus").textContent = "Title is required."; document.getElementById("msFormStatus").className = "status err"; return; }
+var title = (f.elements.title.value || "").trim();
+var slug = slugify((f.elements.slug.value || "").trim() || title);
+var type = f.elements.type.value;
+var blurb = (f.elements.blurb.value || "").trim();
+var link = (f.elements.link.value || "").trim();
+var content = (f.elements.content.value || "").trim();
+if (!title) {
+var st = document.getElementById("msFormStatus");
+st.textContent = "Title is required.";
+st.className = "status err";
+return;
+}
 var item = { slug: slug, title: title, type: type, blurb: blurb, link: link, content: content };
-var idx = -1; mustseeCache.forEach(function (p, i) { if (p.slug === slug) idx = i; }); if (idx >= 0) mustseeCache[idx] = item; else mustseeCache.push(item);
-await saveData(); clearMustSeeForm(); renderMustSeeAdminList(); renderMustSeeList(); renderRoute(); document.getElementById("msFormStatus").textContent = "Saved to cloud: " + title; document.getElementById("msFormStatus").className = "status ok"; setTimeout(function () { document.getElementById("msFormStatus").textContent = ""; }, 2500);
+var idx = -1;
+mustseeCache.forEach(function (p, i) { if (p.slug === slug) idx = i; });
+if (idx >= 0) mustseeCache[idx] = item; else mustseeCache.push(item);
+await saveData();
+clearMustSeeForm();
+renderMustSeeAdminList();
+renderMustSeeList();
+renderRoute();
+var st2 = document.getElementById("msFormStatus");
+st2.textContent = "Saved to cloud: " + title;
+st2.className = "status ok";
+setTimeout(function () { st2.textContent = ""; }, 2500);
 });
 }
 
-var resetBtn = document.getElementById("resetBtn"); if (resetBtn) resetBtn.addEventListener("click", clearForm);
-var msResetBtn = document.getElementById("msResetBtn"); if (msResetBtn) msResetBtn.addEventListener("click", clearMustSeeForm);
+var resetBtn = document.getElementById("resetBtn");
+if (resetBtn) resetBtn.addEventListener("click", clearForm);
+var msResetBtn = document.getElementById("msResetBtn");
+if (msResetBtn) msResetBtn.addEventListener("click", clearMustSeeForm);
 
 var exportBtn = document.getElementById("exportBtn");
-if (exportBtn) { exportBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); var status = document.getElementById("exportStatus"); if (!projectsCache.length) { area.value = ""; status.textContent = "No custom projects to export."; status.className = "status err"; return; } area.value = JSON.stringify(projectsCache, null, 2); status.textContent = "Paste this into the BUILTIN_PROJECTS array."; status.className = "status ok"; }); }
-var copyBtn = document.getElementById("copyBtn"); if (copyBtn) { copyBtn.addEventListener("click", function () { var area = document.getElementById("exportArea"); if (!area.value) { document.getElementById("exportStatus").textContent = "Generate an export first."; document.getElementById("exportStatus").className = "status err"; return; } area.select(); try { navigator.clipboard.writeText(area.value).then(function () { document.getElementById("exportStatus").textContent = "Copied to clipboard."; document.getElementById("exportStatus").className = "status ok"; }); } catch (e) { document.execCommand("copy"); document.getElementById("exportStatus").textContent = "Copied."; document.getElementById("exportStatus").className = "status ok"; } }); }
+if (exportBtn) {
+exportBtn.addEventListener("click", function () {
+var area = document.getElementById("exportArea");
+var status = document.getElementById("exportStatus");
+if (!projectsCache.length) {
+area.value = "";
+status.textContent = "No custom projects to export.";
+status.className = "status err";
+return;
+}
+area.value = JSON.stringify(projectsCache, null, 2);
+status.textContent = "Paste this into the BUILTIN_PROJECTS array.";
+status.className = "status ok";
+});
+}
+var copyBtn = document.getElementById("copyBtn");
+if (copyBtn) {
+copyBtn.addEventListener("click", function () {
+var area = document.getElementById("exportArea");
+var status = document.getElementById("exportStatus");
+if (!area.value) {
+status.textContent = "Generate an export first.";
+status.className = "status err";
+return;
+}
+area.select();
+try {
+navigator.clipboard.writeText(area.value).then(function () {
+status.textContent = "Copied to clipboard.";
+status.className = "status ok";
+});
+} catch (e) {
+document.execCommand("copy");
+status.textContent = "Copied.";
+status.className = "status ok";
+}
+});
+}
 var downloadBtn = document.getElementById("downloadBtn");
-if (downloadBtn) { downloadBtn.addEventListener("click", function () { var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" }); var url = URL.createObjectURL(blob); var a = document.createElement("a"); a.href = url; a.download = "projects.json"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }); }
-var logoutBtn = document.getElementById("logoutBtn"); if (logoutBtn) { logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(); }); }
+if (downloadBtn) {
+downloadBtn.addEventListener("click", function () {
+var blob = new Blob([JSON.stringify(projectsCache, null, 2)], { type: "application/json" });
+var url = URL.createObjectURL(blob);
+var a = document.createElement("a");
+a.href = url;
+a.download = "projects.json";
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+});
+}
+var logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(); });
+}
 })();
 
 /* =========================================================
@@ -1353,7 +1491,6 @@ renderProjectLists();
 renderMustSeeList();
 updateNavAuth();
 document.getElementById("year").textContent = new Date().getFullYear();
-updateSubCount();
 // Re-render now that data is loaded (fixes deep links to detail pages)
 renderRoute();
 if (window.location.hash === "#admin") renderAdmin();
