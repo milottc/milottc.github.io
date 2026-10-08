@@ -87,6 +87,32 @@ text-decoration: none; color: inherit; transition: padding 0.15s ease;
 .fact-block { border: 1px solid var(--border); border-radius: 6px; padding: 40px 32px; }
 .fact-block .section-head { margin-bottom: 20px; }
 #factText { font-size: 1.05rem; line-height: 1.55; margin: 0 0 26px; max-width: 560px; min-height: 3.2em; transition: opacity 0.2s ease; }
+/* Changelog / Updates */
+.changelog-list { border-top: 1px solid var(--border); }
+.changelog-item {
+display: grid; grid-template-columns: 140px 1fr; gap: 24px;
+padding: 28px 0; border-bottom: 1px solid var(--border);
+}
+.changelog-date { font-size: 0.82rem; color: var(--faint); padding-top: 6px; font-variant-numeric: tabular-nums; }
+.changelog-meta { margin-bottom: 6px; }
+.changelog-body h3 { font-size: 1.05rem; font-weight: 500; letter-spacing: -0.01em; margin: 0 0 8px; }
+.changelog-body ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); font-size: 0.93rem; }
+.changelog-body li { margin-bottom: 6px; }
+.changelog-body p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.version-badge {
+display: inline-block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+letter-spacing: 0.06em; background: #f2f2f2; color: #444;
+padding: 2px 7px; border-radius: 3px; margin-right: 6px; vertical-align: middle;
+}
+.changelog-tag {
+display: inline-block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+letter-spacing: 0.06em; padding: 2px 7px; border-radius: 3px; margin-right: 6px; vertical-align: middle;
+}
+.changelog-tag.added { background: #e6f7ec; color: #0a7a3a; }
+.changelog-tag.improved { background: #eef2ff; color: #4f6df5; }
+.changelog-tag.fixed { background: #fdecef; color: #b00020; }
+.changelog-tag.changed { background: #fff4e0; color: #a06000; }
+.changelog-tag.removed { background: #f0f0f0; color: #666; }
 /* Contact */
 .contact-block { border-top: 1px solid var(--border); padding-top: 36px; max-width: 580px; }
 .contact-block p { color: var(--muted); margin: 0 0 22px; }
@@ -166,6 +192,8 @@ section { padding: 40px 0; }
 .project-row { grid-template-columns: 28px 1fr; gap: 14px; }
 .admin-item { flex-direction: column; align-items: flex-start; }
 .mustsee-grid { grid-template-columns: 1fr; }
+.changelog-item { grid-template-columns: 1fr; gap: 8px; }
+.changelog-date { padding-top: 0; }
 }
 </style>
 </head>
@@ -177,6 +205,7 @@ section { padding: 40px 0; }
 <li><a href="#home" data-nav="home">Home</a></li>
 <li><a href="#projects" data-nav="projects">Projects</a></li>
 <li><a href="#mustsee" data-nav="mustsee">Must See</a></li>
+<li><a href="#updates" data-nav="updates">Updates</a></li>
 <li><a href="#about" data-nav="about">About</a></li>
 <li><a href="#interests" data-nav="interests">Interests</a></li>
 <li><a href="#fun" data-nav="fun">Fun</a></li>
@@ -202,7 +231,7 @@ chemistry, aviation, cheese, monkeys, or raccoons. But mostly code.
 </p>
 <div class="cta-row">
 <a class="btn btn-primary" href="#projects">See my projects</a>
-<a class="btn btn-ghost" href="#mustsee">Must See</a>
+<a class="btn btn-ghost" href="#updates">Latest updates</a>
 </div>
 </header>
 <section class="wrap">
@@ -273,6 +302,23 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
 <div class="mustsee-grid" id="mustseeList"></div>
 <div class="cta-row" style="margin-top:40px;">
 <a class="btn btn-ghost" href="#admin">Manage Must See Items</a>
+</div>
+</section>
+</div>
+<!-- ============ UPDATES / CHANGELOG ============ -->
+<div class="view" id="view-updates" data-view="updates">
+<header class="hero wrap" style="padding-bottom:40px;">
+<span class="eyebrow">Updates</span>
+<h1>Changelog</h1>
+<p class="lede">
+Everything I've shipped, fixed, and tweaked — newest first. If you want
+to know what's new around here, this is the place.
+</p>
+</header>
+<section class="wrap" style="border-top:none; padding-top:0;">
+<div id="updatesList" class="changelog-list"></div>
+<div class="cta-row" style="margin-top:40px;">
+<a class="btn btn-ghost" href="#admin">Manage updates</a>
 </div>
 </section>
 </div>
@@ -440,8 +486,8 @@ This is a demo login system stored in the cloud. Do not use a real password.
 <span class="eyebrow">Admin</span>
 <h1>Manage your content.</h1>
 <p class="lede">
-Add, edit, and delete projects and Must See items. Your changes save to the cloud and will
-appear on any device you visit this site from.
+Add, edit, and delete projects, Must See items, and changelog updates. Your changes save to the
+cloud and will appear on any device you visit this site from.
 </p>
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
@@ -462,6 +508,17 @@ appear on any device you visit this site from.
 </div>
 <!-- Admin panel -->
 <div id="adminPanel" style="display:none;">
+
+<!-- ====== TABS ====== -->
+<div class="admin-tabs" role="tablist">
+<button type="button" class="admin-tab active" data-tab="projects" role="tab">Projects</button>
+<button type="button" class="admin-tab" data-tab="mustsee" role="tab">Must See</button>
+<button type="button" class="admin-tab" data-tab="updates" role="tab">Changelog</button>
+<button type="button" class="admin-tab" data-tab="export" role="tab">Export</button>
+</div>
+
+<!-- ====== PROJECTS TAB ====== -->
+<div class="admin-tab-panel active" data-panel="projects">
 <!-- Add / edit Project -->
 <div class="admin-panel">
 <h3 id="formTitle">Add a project</h3>
@@ -522,7 +579,10 @@ appear on any device you visit this site from.
 <p class="sub">These are synced to the cloud (JSONBin).</p>
 <div class="admin-list" id="adminList"></div>
 </div>
+</div><!-- /projects tab -->
 
+<!-- ====== MUST SEE TAB ====== -->
+<div class="admin-tab-panel" data-panel="mustsee">
 <!-- Add / edit MUST SEE -->
 <div class="admin-panel">
 <h3 id="msFormTitle">Add a Must See item</h3>
@@ -577,7 +637,64 @@ appear on any device you visit this site from.
 <p class="sub">These are synced to the cloud (JSONBin).</p>
 <div class="admin-list" id="msAdminList"></div>
 </div>
+</div><!-- /mustsee tab -->
 
+<!-- ====== CHANGELOG TAB ====== -->
+<div class="admin-tab-panel" data-panel="updates">
+<!-- Add / edit UPDATE -->
+<div class="admin-panel">
+<h3 id="upFormTitle">Add a changelog entry</h3>
+<p class="sub">Log a new feature, fix, or improvement for the Updates page.</p>
+<form id="updateForm">
+<input type="hidden" id="up-slug" name="slug" />
+<div class="field-row">
+<div class="field">
+<label for="up-title">Title</label>
+<input type="text" id="up-title" name="title" placeholder="What changed?" required />
+</div>
+<div class="field">
+<label for="up-date">Date</label>
+<input type="date" id="up-date" name="date" />
+</div>
+</div>
+<div class="field-row">
+<div class="field">
+<label for="up-version">Version (optional)</label>
+<input type="text" id="up-version" name="version" placeholder="v1.2.0" />
+</div>
+<div class="field">
+<label for="up-type">Type</label>
+<select id="up-type" name="type">
+<option value="added">Added</option>
+<option value="improved">Improved</option>
+<option value="fixed">Fixed</option>
+<option value="changed">Changed</option>
+<option value="removed">Removed</option>
+</select>
+</div>
+</div>
+<div class="field">
+<label for="up-items">Details</label>
+<textarea id="up-items" name="items" placeholder="One bullet per line."></textarea>
+<div class="hint">One bullet per line — each becomes a list item on the Updates page.</div>
+</div>
+<div class="cta-row">
+<button type="submit" class="btn btn-primary" id="upSaveBtn">Save entry</button>
+<button type="button" class="btn btn-ghost" id="upResetBtn">Clear form</button>
+</div>
+<p class="status" id="upFormStatus" aria-live="polite"></p>
+</form>
+</div>
+<!-- List updates -->
+<div class="admin-panel">
+<h3>Your changelog entries</h3>
+<p class="sub">These are synced to the cloud (JSONBin).</p>
+<div class="admin-list" id="upAdminList"></div>
+</div>
+</div><!-- /updates tab -->
+
+<!-- ====== EXPORT TAB ====== -->
+<div class="admin-tab-panel" data-panel="export">
 <!-- Export -->
 <div class="admin-panel">
 <h3>Export code</h3>
@@ -595,6 +712,8 @@ file to make your projects permanent and load instantly.
 </div>
 <p class="status" id="exportStatus"></p>
 </div>
+</div><!-- /export tab -->
+
 <div class="cta-row" style="margin-top:8px;">
 <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn">Log out of Admin</button>
 </div>
@@ -819,6 +938,7 @@ var USER_KEY = "ethan_user_session";
 var projectsCache = [];
 var usersCache = [];
 var mustseeCache = [];
+var updatesCache = [];
 // Tracks the currently-live blob URL so we can revoke it when we
 // navigate to a different detail page (prevents memory leaks).
 var activeBlobUrl = null;
@@ -835,6 +955,23 @@ function normalizeUrl(u) {
 u = String(u || "").trim();
 if (!u) return "";
 return /^https?:\/\//i.test(u) ? u : "https://" + u;
+}
+function todayIso() {
+var d = new Date();
+var m = String(d.getMonth() + 1).padStart(2, "0");
+var day = String(d.getDate()).padStart(2, "0");
+return d.getFullYear() + "-" + m + "-" + day;
+}
+function formatDate(d) {
+if (!d) return "";
+var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(d));
+if (!m) return String(d);
+var dt = new Date(parseInt(m[1], 10), parseInt(m[2], 10) - 1, parseInt(m[3], 10));
+try {
+return dt.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+} catch (e) {
+return d;
+}
 }
 
 // Simple Base64 obfuscation for demo purposes (NOT SECURE)
@@ -854,6 +991,7 @@ var record = data.record || {};
 projectsCache = Array.isArray(record.projects) ? record.projects : [];
 usersCache = Array.isArray(record.users) ? record.users : [];
 mustseeCache = Array.isArray(record.mustsee) ? record.mustsee : [];
+updatesCache = Array.isArray(record.updates) ? record.updates : [];
 return;
 }
 } catch (e) { console.error("JSONBin fetch failed.", e); }
@@ -863,6 +1001,7 @@ try {
 projectsCache = JSON.parse(localStorage.getItem("ethan_projects") || "[]");
 usersCache = JSON.parse(localStorage.getItem("ethan_users") || "[]");
 mustseeCache = JSON.parse(localStorage.getItem("ethan_mustsee") || "[]");
+updatesCache = JSON.parse(localStorage.getItem("ethan_updates") || "[]");
 } catch (e) {}
 }
 
@@ -871,6 +1010,7 @@ async function saveData() {
 try { localStorage.setItem("ethan_projects", JSON.stringify(projectsCache)); } catch (e) {}
 try { localStorage.setItem("ethan_users", JSON.stringify(usersCache)); } catch (e) {}
 try { localStorage.setItem("ethan_mustsee", JSON.stringify(mustseeCache)); } catch (e) {}
+try { localStorage.setItem("ethan_updates", JSON.stringify(updatesCache)); } catch (e) {}
 
 if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
 try {
@@ -880,7 +1020,7 @@ headers: {
 "Content-Type": "application/json",
 "X-Master-Key": JSONBIN_API_KEY
 },
-body: JSON.stringify({ projects: projectsCache, users: usersCache, mustsee: mustseeCache })
+body: JSON.stringify({ projects: projectsCache, users: usersCache, mustsee: mustseeCache, updates: updatesCache })
 });
 } catch (e) { console.error("JSONBin save failed.", e); }
 }
@@ -923,8 +1063,6 @@ document.getElementById("nav-logout").addEventListener("click", function (e) {
 e.preventDefault();
 localStorage.removeItem(USER_KEY);
 updateNavAuth();
-// Re-render even if we're already on #home, otherwise the nav state
-// would be the only thing that changed and no hashchange would fire.
 if (window.location.hash === "#home" || window.location.hash === "") {
 if (typeof renderRoute === "function") renderRoute();
 } else {
@@ -1073,6 +1211,42 @@ host.innerHTML = mustseeCache.map(mustseeCardHtml).join("");
 }
 
 /* =========================================================
+RENDER: UPDATES / CHANGELOG
+========================================================= */
+function sortedUpdates() {
+return updatesCache.slice().sort(function (a, b) {
+return String(b.date || "").localeCompare(String(a.date || ""));
+});
+}
+function updateItemHtml(u) {
+var meta = "";
+if (u.version) meta += '<span class="version-badge">' + esc(u.version) + '</span>';
+if (u.type) meta += '<span class="changelog-tag ' + esc(u.type) + '">' + esc(u.type) + '</span>';
+var body = "";
+if (u.items && u.items.length) {
+body = '<ul>' + u.items.map(function (li) { return '<li>' + esc(li) + '</li>'; }).join("") + '</ul>';
+}
+return '<div class="changelog-item">' +
+'<div class="changelog-date">' + esc(formatDate(u.date)) + '</div>' +
+'<div class="changelog-body">' +
+(meta ? '<div class="changelog-meta">' + meta + '</div>' : '') +
+'<h3>' + esc(u.title) + '</h3>' +
+body +
+'</div>' +
+'</div>';
+}
+function renderUpdatesList() {
+var host = document.getElementById("updatesList");
+if (!host) return;
+var list = sortedUpdates();
+if (!list.length) {
+host.innerHTML = '<p style="color:var(--muted); padding:24px 0;">No updates yet. Check back soon.</p>';
+return;
+}
+host.innerHTML = list.map(updateItemHtml).join("");
+}
+
+/* =========================================================
 RENDER: MUST SEE DETAIL
 ========================================================= */
 function renderMustSeeDetail(slug) {
@@ -1099,7 +1273,6 @@ html += '<span>Live Preview</span>';
 html += '</div>';
 html += '<iframe id="mustseeFrame" title="Embedded content" style="width:100%; height:600px; border:none; display:block;" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"></iframe></div>';
 } else if (item.link) {
-// If it's a PDF, embed it. Otherwise, show a button.
 if (item.type === "pdf") {
 html += '<div style="margin-bottom:32px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#fafafa;">';
 html += '<div style="padding:12px 16px; background:#f0f0f0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--muted); display:flex; justify-content:space-between; align-items:center;">';
@@ -1185,7 +1358,6 @@ var views = document.querySelectorAll(".view");
 
 function getRoute() {
 var hash = window.location.hash.replace(/^#/, "") || "home";
-// Detail routes: #project-<slug> and #mustsee-<slug>
 if (hash.indexOf("project-") === 0) return hash;
 if (hash.indexOf("mustsee-") === 0) return hash;
 if (document.getElementById("view-" + hash)) return hash;
@@ -1213,6 +1385,7 @@ document.querySelectorAll("[data-nav]").forEach(function (l) {
 l.classList.toggle("active", l.dataset.nav === navKey);
 });
 if (route === "admin") renderAdmin();
+if (route === "updates") renderUpdatesList();
 window.scrollTo({ top: 0, behavior: "auto" });
 }
 
@@ -1251,8 +1424,19 @@ function renderAdmin() {
 var gate = document.getElementById("adminGate");
 var panel = document.getElementById("adminPanel");
 if (!gate || !panel) return;
-if (isAuthed()) { gate.style.display = "none"; panel.style.display = "block"; renderAdminList(); renderMustSeeAdminList(); }
-else { gate.style.display = "block"; panel.style.display = "none"; }
+if (isAuthed()) {
+gate.style.display = "none";
+panel.style.display = "block";
+renderAdminList();
+renderMustSeeAdminList();
+renderUpdatesAdminList();
+// default date to today for the changelog form
+var upDate = document.getElementById("up-date");
+if (upDate && !upDate.value) upDate.value = todayIso();
+} else {
+gate.style.display = "block";
+panel.style.display = "none";
+}
 }
 function renderAdminList() {
 var host = document.getElementById("adminList");
@@ -1286,6 +1470,25 @@ await saveData(); renderMustSeeAdminList(); renderMustSeeList(); renderRoute();
 });
 });
 }
+function renderUpdatesAdminList() {
+var host = document.getElementById("upAdminList");
+if (!host) return;
+if (!updatesCache.length) { host.innerHTML = '<p style="color:var(--faint); font-size:0.88rem; padding:16px 0;">No changelog entries yet.</p>'; return; }
+host.innerHTML = sortedUpdates().map(function (u) {
+var meta = (u.date ? esc(formatDate(u.date)) : "no date");
+if (u.version) meta += " · " + esc(u.version);
+if (u.type) meta += " · " + esc(u.type);
+return '<div class="admin-item"><div><h4>' + esc(u.title) + '</h4><div class="meta">' + meta + '</div></div><div class="admin-actions"><button type="button" class="btn btn-ghost btn-sm" data-edit="' + esc(u.slug) + '">Edit</button><button type="button" class="btn btn-danger btn-sm" data-delete="' + esc(u.slug) + '">Delete</button></div></div>';
+}).join("");
+host.querySelectorAll("[data-edit]").forEach(function (btn) { btn.addEventListener("click", function () { loadUpdateIntoForm(btn.dataset.edit); }); });
+host.querySelectorAll("[data-delete]").forEach(function (btn) {
+btn.addEventListener("click", async function () {
+if (!confirm("Delete this changelog entry?")) return;
+updatesCache = updatesCache.filter(function (u) { return u.slug !== btn.dataset.delete; });
+await saveData(); renderUpdatesAdminList(); renderUpdatesList(); renderRoute();
+});
+});
+}
 function loadIntoForm(slug) {
 var p = projectsCache.filter(function (x) { return x.slug === slug; })[0];
 if (!p) return;
@@ -1311,6 +1514,20 @@ document.getElementById("msFormTitle").textContent = "Edit Must See item";
 document.getElementById("msSaveBtn").textContent = "Update Must See Item";
 window.scrollTo({ top: 600, behavior: "smooth" });
 }
+function loadUpdateIntoForm(slug) {
+var u = updatesCache.filter(function (x) { return x.slug === slug; })[0];
+if (!u) return;
+var f = document.getElementById("updateForm");
+f.elements.slug.value = u.slug || "";
+f.elements.title.value = u.title || "";
+f.elements.date.value = u.date || "";
+f.elements.version.value = u.version || "";
+f.elements.type.value = u.type || "added";
+f.elements.items.value = (u.items || []).join("\n");
+document.getElementById("upFormTitle").textContent = "Edit changelog entry";
+document.getElementById("upSaveBtn").textContent = "Update entry";
+window.scrollTo({ top: 900, behavior: "smooth" });
+}
 function clearForm() {
 var f = document.getElementById("projectForm");
 f.reset();
@@ -1324,6 +1541,15 @@ f.reset();
 document.getElementById("msFormTitle").textContent = "Add a Must See item";
 document.getElementById("msSaveBtn").textContent = "Save Must See Item";
 document.getElementById("msFormStatus").textContent = "";
+}
+function clearUpdateForm() {
+var f = document.getElementById("updateForm");
+f.reset();
+f.elements.slug.value = "";
+f.elements.date.value = todayIso();
+document.getElementById("upFormTitle").textContent = "Add a changelog entry";
+document.getElementById("upSaveBtn").textContent = "Save entry";
+document.getElementById("upFormStatus").textContent = "";
 }
 
 (function () {
@@ -1342,6 +1568,19 @@ s.className = "status err";
 }
 });
 }
+
+/* ---- ADMIN TABS ---- */
+var tabs = document.querySelectorAll(".admin-tab");
+var panels = document.querySelectorAll(".admin-tab-panel");
+tabs.forEach(function (tab) {
+tab.addEventListener("click", function () {
+tabs.forEach(function (t) { t.classList.remove("active"); });
+panels.forEach(function (p) { p.classList.remove("active"); });
+tab.classList.add("active");
+var target = document.querySelector('.admin-tab-panel[data-panel="' + tab.dataset.tab + '"]');
+if (target) target.classList.add("active");
+});
+});
 
 // PROJECT FORM
 var projectForm = document.getElementById("projectForm");
@@ -1418,10 +1657,51 @@ setTimeout(function () { st2.textContent = ""; }, 2500);
 });
 }
 
+// UPDATE FORM
+var updateForm = document.getElementById("updateForm");
+if (updateForm) {
+// default date to today on load
+if (!updateForm.elements.date.value) updateForm.elements.date.value = todayIso();
+
+updateForm.addEventListener("submit", async function (e) {
+e.preventDefault();
+var f = e.target;
+var title = (f.elements.title.value || "").trim();
+var date = (f.elements.date.value || "").trim();
+var version = (f.elements.version.value || "").trim();
+var type = f.elements.type.value;
+var items = (f.elements.items.value || "").split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
+var existingSlug = (f.elements.slug.value || "").trim();
+if (!title) {
+var st = document.getElementById("upFormStatus");
+st.textContent = "Title is required.";
+st.className = "status err";
+return;
+}
+// Generate a slug only for new entries (random suffix avoids accidental overwrites)
+var slug = existingSlug || (slugify((date || todayIso()) + "-" + title) + "-" + Math.random().toString(36).slice(2, 6));
+var entry = { slug: slug, title: title, date: date || todayIso(), version: version, type: type, items: items };
+var idx = -1;
+updatesCache.forEach(function (u, i) { if (u.slug === slug) idx = i; });
+if (idx >= 0) updatesCache[idx] = entry; else updatesCache.push(entry);
+await saveData();
+clearUpdateForm();
+renderUpdatesAdminList();
+renderUpdatesList();
+renderRoute();
+var st2 = document.getElementById("upFormStatus");
+st2.textContent = "Saved: " + title;
+st2.className = "status ok";
+setTimeout(function () { st2.textContent = ""; }, 2500);
+});
+}
+
 var resetBtn = document.getElementById("resetBtn");
 if (resetBtn) resetBtn.addEventListener("click", clearForm);
 var msResetBtn = document.getElementById("msResetBtn");
 if (msResetBtn) msResetBtn.addEventListener("click", clearMustSeeForm);
+var upResetBtn = document.getElementById("upResetBtn");
+if (upResetBtn) upResetBtn.addEventListener("click", clearUpdateForm);
 
 var exportBtn = document.getElementById("exportBtn");
 if (exportBtn) {
@@ -1489,6 +1769,7 @@ async function init() {
 await fetchData();
 renderProjectLists();
 renderMustSeeList();
+renderUpdatesList();
 updateNavAuth();
 document.getElementById("year").textContent = new Date().getFullYear();
 // Re-render now that data is loaded (fixes deep links to detail pages)
