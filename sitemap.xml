@@ -1,10 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
+  <!-- Main Website -->
   <url>
-       <loc>https://milottc.github.io/</loc>
-       <lastmod>2026-10-15T19:38:42+00:00</lastmod>
-       <priority>1.0000</priority>
+    <loc>https://milottc.github.io/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <priority>1.0</priority>
   </url>
+
+  <!-- Flight Simulation Apps -->
+  <url>
+    <loc>https://milottc.github.io/Flight-sim/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/html-flight-sim/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Games -->
+  <url>
+    <loc>https://milottc.github.io/zombie-rush/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/holdout/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/neon-breaker/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/Quadton/</loc>
+    <lastmod>2026-10-10</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/Resus/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Projects & Apps -->
+  <url>
+    <loc>https://milottc.github.io/pc/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/milomonitor/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://milottc.github.io/my-old-website/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <priority>0.5</priority>
+  </url>
+
 </urlset>
