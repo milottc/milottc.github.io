@@ -1,0 +1,17 @@
+# 🤖 Global Crawler Configurations for milottc.github.io
+User-agent: *
+Allow: /
+Allow: /Flight-sim/
+Allow: /zombie-rush/
+Allow: /holdout/
+Allow: /Resus/
+
+# 🔒 Disallow Admin Panels and Scraping Artifacts
+Disallow: /admin
+Disallow: /login
+Disallow: /config/
+Disallow: /private/
+Disallow: /sdsa/
+
+# 🗺️ Core Sitemap Roadmap Location
+Sitemap: https://github.io
