@@ -289,8 +289,76 @@ h2 {
 .project-meta span + span::before { content: " · "; margin: 0 4px; }
 
 /* =========================================================
-   MUST SEE GRID
+   MUST SEE GRID & PREMIUM BANNER
    ========================================================= */
+.promo-showcase {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 40px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+  position: relative;
+}
+
+.promo-header {
+  background: #f4f4f5;
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  position: relative;
+}
+
+.promo-dots { display: flex; gap: 6px; }
+.promo-dots span { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+.promo-dots span:nth-child(1) { background: #ff5f56; }
+.promo-dots span:nth-child(2) { background: #ffbd2e; }
+.promo-dots span:nth-child(3) { background: #27c93f; }
+
+.promo-title { 
+  font-size: 0.75rem; 
+  font-weight: 600; 
+  color: var(--faint); 
+  text-transform: uppercase; 
+  letter-spacing: 0.06em; 
+}
+
+.promo-indicators { display: flex; gap: 6px; }
+.indicator { 
+  width: 6px; height: 6px; 
+  border-radius: 50%; 
+  background: #d1d1d6; 
+  transition: background 0.3s; 
+}
+.indicator.active { background: var(--fg); }
+
+.promo-body {
+  position: relative;
+  height: 240px;
+  background: #111;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slide.active-slide {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 2;
+}
+
 .mustsee-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -908,8 +976,6 @@ footer {
 </div>
 </nav>
 
-<!-- ===== NEON VEINS BANNER: END (... down to this line) ===== -->
-
 <main>
 <div class="view active" id="view-home" data-view="home">
 <header class="hero wrap">
@@ -982,8 +1048,6 @@ experiments, and some exist because I thought "wouldn't it be cool if…"
 </section>
 </div>
 <!-- ============ MUST SEE ============ -->
-<<!-- ============ MUST SEE ============ -->
-<!-- ============ MUST SEE ============ -->
 <div class="view" id="view-mustsee" data-view="mustsee">
 <header class="hero wrap" style="padding-bottom:32px;">
 <span class="eyebrow">Must See</span>
@@ -994,12 +1058,20 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
 
-<!-- Transitioning Banner -->
-<div id="gameBanner" style="position:relative; height:220px; border:1px solid var(--border); border-radius:8px; overflow:hidden; background:var(--soft); margin-bottom:32px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-  <!-- Game 1 -->
-  <iframe src="https://milottc.github.io/Flight-sim" style="position:absolute; inset:0; width:100%; height:100%; border:none; transition: opacity 1s ease; z-index: 2; opacity: 1;" title="Flight Simulator" loading="lazy"></iframe>
-  <!-- Game 2 -->
-  <iframe src="https://milottc.github.io/rivals" style="position:absolute; inset:0; width:100%; height:100%; border:none; transition: opacity 1s ease; z-index: 1; opacity: 0; pointer-events: none;" title="Rivals" loading="lazy"></iframe>
+<!-- Beautiful App Preview Banner -->
+<div class="promo-showcase">
+  <div class="promo-header">
+    <div class="promo-dots"><span></span><span></span><span></span></div>
+    <div class="promo-title">Live App Preview</div>
+    <div class="promo-indicators">
+      <span class="indicator active" id="ind-0"></span>
+      <span class="indicator" id="ind-1"></span>
+    </div>
+  </div>
+  <div class="promo-body">
+    <iframe src="https://milottc.github.io/Flight-sim" class="slide active-slide" title="Flight Simulator"></iframe>
+    <iframe src="https://milottc.github.io/rivals" class="slide" title="Rivals"></iframe>
+  </div>
 </div>
 
 <div class="mustsee-grid" id="mustseeList"></div>
@@ -2994,7 +3066,7 @@ logoutBtn.addEventListener("click", function () { setAuthed(false); renderAdmin(
 })();
 
 /* =========================================================
-INIT
+INIT & PREMIUM BANNER TRANSITION
 ========================================================= */
 async function init() {
 await fetchData();
@@ -3004,40 +3076,35 @@ renderUpdatesList();
 renderStats();
 updateNavAuth();
 document.getElementById("year").textContent = new Date().getFullYear();
+
 // Re-render now that data is loaded (fixes deep links to detail pages)
 renderRoute();
 if (window.location.hash === "#admin") renderAdmin();
+
+// Start the Slideshow Timer for the Must See page
+let currentSlide = 0;
+const slides = document.querySelectorAll('.promo-body .slide');
+const indicators = document.querySelectorAll('.promo-indicators .indicator');
+
+if (slides.length > 0) {
+  setInterval(() => {
+    // 1. Remove active class from all slides and indicators
+    slides.forEach(s => s.classList.remove('active-slide'));
+    indicators.forEach(i => i.classList.remove('active'));
+
+    // 2. Calculate next slide
+    currentSlide = (currentSlide + 1) % slides.length;
+
+    // 3. Add active class to the new slide and indicator
+    slides[currentSlide].classList.add('active-slide');
+    if(indicators[currentSlide]) {
+        indicators[currentSlide].classList.add('active');
+    }
+  }, 5000); // Changes every 5 seconds
 }
+}
+
 init();
-  /* =========================================================
-GAME BANNER TRANSITION
-========================================================= */
-(function() {
-  var bannerActive = 0;
-  var bannerFrames = document.querySelectorAll('#gameBanner iframe');
-  
-  if (bannerFrames.length === 2) {
-    setInterval(function() {
-      // Only animate if the Must See view is currently visible
-      var mustSeeView = document.getElementById('view-mustsee');
-      if (!mustSeeView || !mustSeeView.classList.contains('active')) return;
-      
-      // Hide current
-      bannerFrames[bannerActive].style.opacity = '0';
-      bannerFrames[bannerActive].style.zIndex = '1';
-      bannerFrames[bannerActive].style.pointerEvents = 'none';
-      
-      // Switch index
-      bannerActive = (bannerActive + 1) % 2;
-      
-      // Show next
-      bannerFrames[bannerActive].style.opacity = '1';
-      bannerFrames[bannerActive].style.zIndex = '2';
-      bannerFrames[bannerActive].style.pointerEvents = 'auto';
-      
-    }, 5000); // Changes every 5 seconds
-  }
-})();
 </script>
 </body>
 </html>
