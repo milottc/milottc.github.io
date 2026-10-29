@@ -291,6 +291,22 @@ h2 {
 /* =========================================================
    MUST SEE GRID & PREMIUM BANNER
    ========================================================= */
+/* Always-on featured banner above the rotating showcase */
+.featured-banner {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 20px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+.featured-banner iframe {
+  display: block;
+  width: 100%;
+  height: 180px;   /* tweak to match the banner's real aspect ratio */
+  border: none;
+}
+
 .promo-showcase {
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -1058,7 +1074,6 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
 </header>
 <section class="wrap" style="border-top:none; padding-top:0;">
 
-<!-- Beautiful App Preview Banner -->
 <!-- Always-visible featured banner (Neon Viens) -->
 <div class="featured-banner">
   <iframe
@@ -1085,6 +1100,7 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
     <iframe src="https://milottc.github.io/holdout" class="slide" title="Holdout"></iframe>
   </div>
 </div>
+
 <div class="mustsee-grid" id="mustseeList"></div>
 <div class="cta-row" style="margin-top:40px;">
 <a class="btn btn-ghost" href="#admin">Manage Must See Items</a>
@@ -3111,7 +3127,7 @@ if (slides.length > 0) {
     if(indicators[currentSlide]) {
         indicators[currentSlide].classList.add('active');
     }
-  }, 3000); // Changes every 5 seconds
+  }, 3000); // Rotate every 3 seconds
 }
 }
 
