@@ -291,26 +291,6 @@ h2 {
 /* =========================================================
    MUST SEE GRID & PREMIUM BANNER
    ========================================================= */
-/* Always-on featured banner above the rotating showcase */
-.featured-banner {
-  position: relative;
-  width: 100%;
-  height: 400px; /* Larger height for full screen */
-  background: #000;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-  margin-bottom: 40px;
-}
-.featured-banner iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
 .promo-showcase {
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -969,7 +949,6 @@ footer {
   .changelog-item { grid-template-columns: 1fr; gap: 8px; }
   .changelog-date { padding-top: 0; }
   .bar-row { grid-template-columns: 96px 1fr 40px; font-size: 0.82rem; }
-  .featured-banner { height: 250px; } /* Adjust height for mobile */
 }
 </style>
 </head>
@@ -1078,15 +1057,6 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
 </p>
 </header>
 
-<!-- Always-visible featured banner (Neon Viens) - FULL SCREEN WIDTH -->
-<div class="featured-banner">
-  <iframe
-    src="https://winsontian254-dotcom.github.io/NEON_VIENS/promo/banner.html"
-    title="Neon Viens"
-    loading="lazy"
-    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-</div>
-
 <section class="wrap" style="border-top:none; padding-top:0;">
 
 <!-- Beautiful App Preview Banner (rotating) -->
@@ -1098,10 +1068,12 @@ A curated collection of my favorite projects, games, articles, and PDFs. This is
       <span class="indicator active" id="ind-0"></span>
       <span class="indicator" id="ind-1"></span>
       <span class="indicator" id="ind-2"></span>
+      <span class="indicator" id="ind-3"></span>
     </div>
   </div>
   <div class="promo-body">
-    <iframe src="https://milottc.github.io/Flight-sim" class="slide active-slide" title="Flight Simulator"></iframe>
+    <iframe src="https://milottc.github.io/Flight-sim/banner.html" class="slide active-slide" title="Flight Simulator"></iframe>
+    <iframe src="https://milottc.github.io/Flight-sim" class="slide" title="Flight Simulator"></iframe>
     <iframe src="https://milottc.github.io/rivals" class="slide" title="Rivals"></iframe>
     <iframe src="https://milottc.github.io/holdout" class="slide" title="Holdout"></iframe>
   </div>
